@@ -1,16 +1,35 @@
 import { useState, useEffect } from 'react';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import DraggableItem from './DraggableItem';
 import DroppableZone from './DroppableZone';
-import Feedback from '../dragAndDrop/FeedBack'
+import Feedback from '../dragAndDrop/FeedBack';
 import Stats from '../Stats';
 import FinalResults from '../FinalResults';
 import exercisesData from './data/dragAndDropExercises.json';
 
 const DragAndDrop = () => {
+    // Initialize sensors for both mouse and touch interactions
+    const mouseSensor = useSensor(MouseSensor, {
+        // Require the mouse to move by 10 pixels before activating
+        activationConstraint: {
+            distance: 10,
+        },
+    });
+    
+    const touchSensor = useSensor(TouchSensor, {
+        // Require the touch to move by 10 pixels before activating
+        activationConstraint: {
+            delay: 250,
+            tolerance: 5,
+        },
+    });
+
+    // Combine both sensors
+    const sensors = useSensors(mouseSensor, touchSensor);
+
     const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
     const [categoryItems, setCategoryItems] = useState({});
-    const [movedItems, setMovedItems] = useState(new Set()); // Track initially moved items
+    const [movedItems, setMovedItems] = useState(new Set());
     const [showFeedback, setShowFeedback] = useState(false);
     const [isCorrect, setIsCorrect] = useState(false);
     const [showFinalResults, setShowFinalResults] = useState(false);
@@ -28,7 +47,6 @@ const DragAndDrop = () => {
     const totalExercises = exercisesData.exercises.length;
     const pointsPerQuestion = 100 / totalExercises;
 
-    // Initialize categories state
     useEffect(() => {
         if (currentExercise) {
             const initialCategories = {};
@@ -36,11 +54,10 @@ const DragAndDrop = () => {
                 initialCategories[category] = [];
             });
             setCategoryItems(initialCategories);
-            setMovedItems(new Set()); // Reset moved items for new exercise
+            setMovedItems(new Set());
         }
     }, [currentExerciseIndex]);
 
-    // Timer effect
     useEffect(() => {
         const timer = setInterval(() => {
             if (!showFeedback && !showFinalResults) {
@@ -65,19 +82,16 @@ const DragAndDrop = () => {
             }
         });
 
-        // If the item is coming from the initial options
         if (!sourceCategory) {
             const draggedItem = currentExercise.options.find(item => item.id === draggedItemId);
             if (draggedItem) {
-                setMovedItems(prev => new Set([...prev, draggedItemId])); // Mark as moved from initial position
+                setMovedItems(prev => new Set([...prev, draggedItemId]));
                 setCategoryItems(prev => ({
                     ...prev,
                     [targetCategory]: [...prev[targetCategory], draggedItem]
                 }));
             }
-        } 
-        // If the item is moving between zones
-        else if (sourceCategory !== targetCategory) {
+        } else if (sourceCategory !== targetCategory) {
             setCategoryItems(prev => {
                 const draggedItem = prev[sourceCategory].find(item => item.id === draggedItemId);
                 return {
@@ -86,7 +100,7 @@ const DragAndDrop = () => {
                     [targetCategory]: [...prev[targetCategory], draggedItem]
                 };
             });
-            setMovedItems(prev => new Set([...prev, draggedItemId])); // Mark the item as moved
+            setMovedItems(prev => new Set([...prev, draggedItemId]));
         }
     };
 
@@ -166,9 +180,7 @@ const DragAndDrop = () => {
             />
         );
     }
-    
 
-    // Get all items that have been placed in any category
     const placedItems = new Set(
         Object.values(categoryItems)
             .flat()
@@ -177,7 +189,7 @@ const DragAndDrop = () => {
 
     return (
         <>
-        <DndContext onDragEnd={handleDragEnd}>
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
             <div className="p-4 max-w-4xl mx-auto">
                 <h1 className="text-2xl font-semibold text-green-800 mb-6">
                     {currentExercise.question}
@@ -195,7 +207,6 @@ const DragAndDrop = () => {
                     isCorrect={isCorrect}
                 />
 
-                {/* Draggable Items Container */}
                 <div className="flex flex-wrap gap-4 mb-8">
                     {currentExercise.options.map((item) => (
                         <div key={item.id} className="flex-1 min-w-[200px]">
@@ -203,7 +214,9 @@ const DragAndDrop = () => {
                                 <DraggableItem
                                     id={item.id}
                                     text={item.content}
-                                    className={`transition-all duration-500 ease-in-out ${movedItems.has(item.id) ? 'bg-yellow-300 transform scale-105' : ''}`}
+                                    className={`transition-all duration-500 ease-in-out ${
+                                        movedItems.has(item.id) ? 'bg-yellow-300 transform scale-105' : ''
+                                    }`}
                                 />
                             ) : (
                                 <div className="p-6 bg-gray-200 rounded-md text-center text-gray-400">
@@ -213,8 +226,7 @@ const DragAndDrop = () => {
                     ))}
                 </div>
 
-                {/* Droppable Zones Container */}
-                <div className="grid grid-cols-2 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                     {currentExercise.categories.map((category) => (
                         <DroppableZone
                             key={category}
@@ -236,9 +248,6 @@ const DragAndDrop = () => {
         </DndContext>
         </>
     );
-
-    
 };
-
 
 export default DragAndDrop;
