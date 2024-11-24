@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { DndContext } from '@dnd-kit/core';
 import DraggableItem from './DraggableItem';
 import DroppableZone from './DroppableZone';
-import Feedback from './Feedback';
+import Feedback from '../dragAndDrop/FeedBack'
 import Stats from '../Stats';
 import FinalResults from '../FinalResults';
 import exercisesData from './data/dragAndDropExercises.json';
