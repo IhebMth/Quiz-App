@@ -1,0 +1,40 @@
+{
+    "exercises": [
+      {
+        "id": 1,
+        "type": "sensory-details",
+        "question": "Sort the sensory details.",
+        "categories": ["touch", "sight"],
+        "options": [
+          { "id": "1", "content": "pin prick", "category": "touch" },
+          { "id": "2", "content": "chilly night air", "category": "touch" },
+          { "id": "3", "content": "bright red sparks", "category": "sight" },
+          { "id": "4", "content": "shiny copper pan", "category": "sight" }
+        ]
+      },
+      {
+        "id": 2,
+        "type": "animals-habitat",
+        "question": "Sort these animals by their habitat.",
+        "categories": ["water", "land"],
+        "options": [
+          { "id": "1", "content": "dolphin", "category": "water" },
+          { "id": "2", "content": "elephant", "category": "land" },
+          { "id": "3", "content": "shark", "category": "water" },
+          { "id": "4", "content": "lion", "category": "land" }
+        ]
+      },
+      {
+        "id": 3,
+        "type": "parts-of-speech",
+        "question": "Categorize these words by their part of speech.",
+        "categories": ["nouns", "verbs"],
+        "options": [
+          { "id": "1", "content": "run", "category": "verbs" },
+          { "id": "2", "content": "house", "category": "nouns" },
+          { "id": "3", "content": "jump", "category": "verbs" },
+          { "id": "4", "content": "book", "category": "nouns" }
+        ]
+      }
+    ]
+  }
