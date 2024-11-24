@@ -190,26 +190,25 @@ const DragAndDrop = () => {
     return (
         <>
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-            <div className="p-4 max-w-4xl mx-auto">
-                <h1 className="text-2xl font-semibold text-green-800 mb-6">
+            <div className="p-2 sm:p-4 max-w-4xl mx-auto">
+                <h1 className="text-xl sm:text-2xl font-semibold text-green-800 mb-4 sm:mb-6">
                     {currentExercise.question}
                 </h1>
-
                 <Stats
                     questionNumber={currentExerciseIndex + 1}
                     totalQuestions={totalExercises}
                     timeElapsed={timeElapsed}
                     score={score}
                 />
-
                 <Feedback
                     isVisible={showFeedback}
                     isCorrect={isCorrect}
                 />
-
-                <div className="flex flex-wrap gap-4 mb-8">
+                
+                {/* Mobile-optimized draggable items section */}
+                <div className="flex flex-wrap gap-2 sm:gap-4 mb-4 sm:mb-8">
                     {currentExercise.options.map((item) => (
-                        <div key={item.id} className="flex-1 min-w-[200px]">
+                        <div key={item.id} className="flex-1 min-w-[150px] sm:min-w-[200px]">
                             {!placedItems.has(item.id) ? (
                                 <DraggableItem
                                     id={item.id}
@@ -219,14 +218,15 @@ const DragAndDrop = () => {
                                     }`}
                                 />
                             ) : (
-                                <div className="p-6 bg-gray-200 rounded-md text-center text-gray-400">
+                                <div className="p-4 sm:p-6 bg-gray-200 rounded-md text-center text-gray-400">
                                 </div>
                             )}
                         </div>
                     ))}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Mobile-optimized droppable zones grid */}
+                <div className="grid grid-cols-2 gap-2 sm:gap-6 mb-4 sm:mb-8">
                     {currentExercise.categories.map((category) => (
                         <DroppableZone
                             key={category}
@@ -237,17 +237,20 @@ const DragAndDrop = () => {
                     ))}
                 </div>
 
-                <button
-                    onClick={checkAnswers}
-                    disabled={getAllPlacedItems() !== currentExercise.options.length}
-                    className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-semibold py-3 px-8 rounded-md text-lg w-[200px] transition-colors"
-                >
-                    Submit
-                </button>
+                <div className="flex justify-center">
+                    <button
+                        onClick={checkAnswers}
+                        disabled={getAllPlacedItems() !== currentExercise.options.length}
+                        className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white font-semibold py-2 sm:py-3 px-6 sm:px-8 rounded-md text-base sm:text-lg w-full sm:w-[200px] transition-colors"
+                    >
+                        Submit
+                    </button>
+                </div>
             </div>
         </DndContext>
         </>
     );
 };
+
 
 export default DragAndDrop;

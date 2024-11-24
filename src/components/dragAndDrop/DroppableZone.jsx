@@ -5,7 +5,7 @@ import DraggableItem from './DraggableItem';
 
 const DroppableZone = ({ id, label, items = [] }) => {
     const { isOver, setNodeRef } = useDroppable({ id });
-
+    
     return (
         <div
             ref={setNodeRef}
@@ -15,16 +15,16 @@ const DroppableZone = ({ id, label, items = [] }) => {
                     : 'border-blue-300 bg-white'
             }`}
         >
-            <div className={`text-gray-700 font-medium text-center py-3 border-b-2 ${
+            <div className={`text-gray-700 font-medium text-center py-2 sm:py-3 border-b-2 ${
                 isOver ? 'border-blue-500' : 'border-blue-300'
             }`}>
-                <span className="capitalize">{label}</span>
-                <span className="ml-2 text-sm text-gray-500">
-                    ({items.length} items)
+                <span className="capitalize text-sm sm:text-base">{label}</span>
+                <span className="ml-1 sm:ml-2 text-xs sm:text-sm text-gray-500">
+                    ({items.length})
                 </span>
             </div>
-            
-            <div className="min-h-[200px] p-4 space-y-3">
+           
+            <div className="min-h-[120px] sm:min-h-[200px] p-2 sm:p-4 space-y-2 sm:space-y-3">
                 <AnimatePresence>
                     {items.map((item) => (
                         <motion.div
