@@ -83,9 +83,10 @@ const ExamplePracticeSection = ({ children }) => {
   };
 
   const toggleMode = () => {
-    const newMode = mode === "practice" ? "example" : "practice";
-    setMode(newMode);
+    // Simply toggle the mode without resetting any state
+    setMode(prev => prev === "practice" ? "example" : "practice");
 
+    // Smooth scroll to section
     if (sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -103,7 +104,6 @@ const ExamplePracticeSection = ({ children }) => {
     </motion.div>
   );
 
-  // Prop validation for ExampleItem
   ExampleItem.propTypes = {
     text: PropTypes.string.isRequired,
   };
@@ -125,8 +125,22 @@ const ExamplePracticeSection = ({ children }) => {
         )}
       </button>
 
-      {mode === "example" ? (
-        <div className="transition-all duration-300">
+      <div className="relative">
+        {/* Practice Mode */}
+        <div
+          className={`transition-opacity duration-300 ${
+            mode === "practice" ? "opacity-100 visible" : "opacity-0 invisible absolute top-0 left-0 w-full"
+          }`}
+        >
+          {children}
+        </div>
+
+        {/* Example Mode */}
+        <div
+          className={`transition-opacity duration-300 ${
+            mode === "example" ? "opacity-100 visible" : "opacity-0 invisible absolute top-0 left-0 w-full"
+          }`}
+        >
           <div className="bg-white p-6 rounded-lg border-2 border-gray-200 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               {exampleExercise.question}
@@ -229,9 +243,7 @@ const ExamplePracticeSection = ({ children }) => {
             ))}
           </div>
         </div>
-      ) : (
-        <div className="transition-all duration-300">{children}</div>
-      )}
+      </div>
     </div>
   );
 };
