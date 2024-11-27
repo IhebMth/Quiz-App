@@ -28,9 +28,9 @@ const Stats = ({ questionNumber, totalQuestions, timeElapsed, score }) => {
         </div>
 
         {/* SmartScore Section */}
-        <div className="flex flex-col items-center w-full border-b-4 border-orange-600">
+        <div className="flex flex-col items-center w-full border-b-4 border-orange-700">
           <p className="text-sm font-bold text-gray-800 pb-2">SmartScore</p>
-          <p className="text-lg font-semibold text-orange-600 pb-2">
+          <p className="text-lg font-semibold text-orange-700 pb-2">
             {Math.round(score)} / 100
           </p>
         </div>
