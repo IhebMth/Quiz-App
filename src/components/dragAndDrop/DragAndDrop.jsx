@@ -203,7 +203,7 @@ const DragAndDrop = () => {
 
   return (
     <div className="min-h-screen p-4">
-      <div className="relative flex bg-white p-8 sm:p-12 rounded-xl shadow-xl min-h-[800px] max-w-[1400px] mx-auto">
+      <div className="relative flex bg-white  sm:p-12 rounded-xl shadow-xl min-h-[800px] max-w-[1400px] mx-auto">
         {/* Desktop Stats - absolutely positioned in the top right */}
         <div className="hidden sm:block absolute top-8 right-8 z-10 w-[100px]"> {/* Stats container for desktop */}
           <Stats
@@ -218,7 +218,7 @@ const DragAndDrop = () => {
         <div className="flex-1 sm:pr-[80px]"> {/* Only apply right padding on desktop */}
           <div className="relative">
             {/* Mobile Stats */}
-            <div className="sm:hidden p-4">
+            <div className="sm:hidden">
               <Stats
                 questionNumber={currentExerciseIndex + 1}
                 totalQuestions={totalExercises}
