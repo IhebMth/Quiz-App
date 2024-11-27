@@ -6,7 +6,7 @@ import './App.css';
 const App = () => {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-br from-blue-500 via-blue-300 to-green-300">
         <Navbar />
         <div className="p-6">
           <Routes>

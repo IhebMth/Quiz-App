@@ -23,7 +23,7 @@ const DroppableZone = ({ id, label, items = [] }) => {
                     ({items.length})
                 </span>
             </div>
-           
+
             <div className="min-h-[120px] sm:min-h-[200px] p-2 sm:p-4 space-y-2 sm:space-y-3">
                 <AnimatePresence>
                     {items.map((item) => (
@@ -34,7 +34,12 @@ const DroppableZone = ({ id, label, items = [] }) => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                         >
-                            <DraggableItem id={item.id} text={item.content} />
+                            <DraggableItem 
+                                id={item.id} 
+                                content={item.content} 
+                                type={item.type} 
+                                label={item.label} 
+                            />
                         </motion.div>
                     ))}
                 </AnimatePresence>
@@ -50,6 +55,8 @@ DroppableZone.propTypes = {
         PropTypes.shape({
             id: PropTypes.string.isRequired,
             content: PropTypes.string.isRequired,
+            type: PropTypes.oneOf(['text', 'image']).isRequired,
+            label: PropTypes.string,
             category: PropTypes.string.isRequired
         })
     ),

@@ -1,38 +1,68 @@
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+import { CheckCircle } from 'lucide-react';
 
-const Feedback = ({ isVisible, isCorrect }) => {
+const getFeedbackMessage = (questionNumber) => {
+  const messages = [
+    { text: "Good job! You're doing great! 🌟", emoji: "🎯" },
+    { text: "Fantastic! Keep up the momentum! 🚀", emoji: "⭐" },
+    { text: "Brilliant! You're on fire! 🔥", emoji: "🎨" },
+    { text: "Outstanding! You're unstoppable! 💪", emoji: "🏆" },
+    { text: "Phenomenal! You're a genius! 🧠", emoji: "🎉" },
+    { text: "Incredible! You're crushing it! 💫", emoji: "🔥" },
+    { text: "Amazing! You're a superstar! ⭐", emoji: "🎸" },
+    { text: "Spectacular! You're legendary! 👑", emoji: "🎭" },
+    { text: "Magnificent! Pure excellence! 🌟", emoji: "🎪" },
+    { text: "Perfect! You're extraordinary! 💎", emoji: "🎯" }
+  ];
+  
+  return messages[Math.min(questionNumber - 1, messages.length - 1)];
+};
+
+const Feedback = ({ isVisible, isCorrect, questionNumber }) => {
   if (!isVisible) return null;
 
+  const message = getFeedbackMessage(questionNumber);
+
   return (
-    <div
-      className={`fixed top-4 right-4 p-4 rounded-lg shadow-lg transition-all duration-300 ${
-        isVisible ? 'opacity-100 transform translate-y-0' : 'opacity-0 transform -translate-y-4'
-      } ${isCorrect ? 'bg-green-500' : 'bg-red-500'}`}
+    <motion.div
+      initial={{ scale: 0.5, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      exit={{ scale: 0.5, opacity: 0 }}
+      className="fixed inset-0 flex items-center justify-center z-50 pointer-events-none"
     >
-      <div className="flex items-center text-white">
-        {isCorrect ? (
-          <>
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span className="font-medium">Correct!</span>
-          </>
-        ) : (
-          <>
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-            <span className="font-medium">Try again!</span>
-          </>
-        )}
-      </div>
-    </div>
+      {isCorrect && (
+        <div className="bg-gradient-to-r from-green-500 to-emerald-500 p-6 rounded-xl shadow-2xl transform transition-all duration-500 text-white max-w-md relative overflow-hidden">
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5"
+            animate={{
+              opacity: [0.1, 0.15, 0.1],
+              scale: [1, 1.05, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
+          <div className="flex flex-col items-center space-y-4 relative z-10">
+            <div className="text-6xl mb-2">{message.emoji}</div>
+            <CheckCircle className="w-12 h-12 text-white animate-bounce" />
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-2">Question {questionNumber}</h2>
+              <p className="text-lg font-medium">{message.text}</p>
+            </div>
+          </div>
+        </div>
+      )}
+    </motion.div>
   );
 };
 
 Feedback.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   isCorrect: PropTypes.bool.isRequired,
+  questionNumber: PropTypes.number.isRequired,
 };
 
 export default Feedback;

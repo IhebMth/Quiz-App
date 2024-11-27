@@ -1,40 +1,205 @@
 {
-    "exercises": [
+  "exercises": [
+    {
+      "id": 1,
+      "type": "animals",
+      "contentType": "image",
+      "question": "Sort these animals by their habits.",
+      "categories": ["water", "land"],
+      "options": [
+        {
+          "id": "1",
+          "content": "/images/dolphin.png",
+          "label": "Dolphin",
+          "category": "water",
+          "type": "image"
+        },
+        {
+          "id": "2",
+          "content": "/images/elephant.png",
+          "label": "Elephant",
+          "category": "land",
+          "type": "image"
+        },
+        {
+          "id": "3",
+          "content": "/images/shark.png",
+          "label": "Shark",
+          "category": "water",
+          "type": "image"
+        },
+        {
+          "id": "4",
+          "content": "/images/lion.png",
+          "label": "Lion",
+          "category": "land",
+          "type": "image"
+        }
+      ],
+      "solve": "Water animals, like dolphins and sharks, live in aquatic environments where they are adapted to swim, dive, and thrive in the water. Dolphins, for example, are known for their playful nature and live in oceans and seas, while sharks are predatory creatures that also call the waters of the oceans home. On the other hand, land animals like elephants and lions are adapted to life on land, with features such as strong limbs and specialized behaviors for surviving in terrestrial environments. Elephants, massive creatures with their large ears and trunks, roam across savannahs and forests, whereas lions, known for their strength and hunting prowess, live in grassy plains and are often referred to as the kings of the jungle."
+    },
+    {
+      "id": 2,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["touch", "sight"],
+      "options": [
+        { "id": "1", "content": "pin prick", "category": "touch", "type": "text" },
+        { "id": "2", "content": "chilly night air", "category": "touch", "type": "text" },
+        { "id": "3", "content": "bright red sparks", "category": "sight", "type": "text" },
+        { "id": "4", "content": "shiny copper pan", "category": "sight", "type": "text" }
+      ],
+      "solve": "Sensory details are descriptions that appeal to the five senses, helping readers visualize, hear, feel, taste, or smell a scene. For example, touch sensory details refer to physical sensations experienced by the body, such as the sharp feeling of a 'pin prick' or the 'chilly night air' that can be felt against the skin. On the other hand, sight sensory details describe what can be seen, like 'bright red sparks' that catch the eye or the gleaming 'shiny copper pan' that draws attention. These sensory details help create vivid mental images and evoke a deeper emotional connection with the scene."
+    },
+    {
+      "id": 3,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["touch", "sight"],
+      "options": [
+        { "id": "1", "content": "cool breeze", "category": "touch", "type": "text" },
+        { "id": "2", "content": "golden sunrise", "category": "sight", "type": "text" },
+        { "id": "3", "content": "rough bark", "category": "touch", "type": "text" },
+        { "id": "4", "content": "crimson sky", "category": "sight", "type": "text" }
+      ],
+      "solve": "Sensory details help to make experiences more vivid. For example, 'cool breeze' and 'rough bark' appeal to the sense of touch, while 'golden sunrise' and 'crimson sky' appeal to the sense of sight. These details allow readers to immerse themselves in the scene, feeling the textures and seeing the colors described."
+    },
+    {
+      "id": 4,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["sound", "taste"],
+      "options": [
+        { "id": "1", "content": "crackling fire", "category": "sound", "type": "text" },
+        { "id": "2", "content": "salty ocean breeze", "category": "taste", "type": "text" },
+        { "id": "3", "content": "gentle waves", "category": "sound", "type": "text" },
+        { "id": "4", "content": "sweet vanilla", "category": "taste", "type": "text" }
+      ],
+      "solve": "Sensory details come from various senses like sound and taste. 'Crackling fire' and 'gentle waves' are sound-based details, providing auditory sensations. 'Salty ocean breeze' and 'sweet vanilla' are taste-related details, giving readers a sense of flavor. Together, they enhance the reader's experience."
+    },
+    {
+      "id": 5,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["sight", "touch"],
+      "options": [
+        { "id": "1", "content": "sharp thorns", "category": "touch", "type": "text" },
+        { "id": "2", "content": "glowing moon", "category": "sight", "type": "text" },
+        { "id": "3", "content": "burning sand", "category": "touch", "type": "text" },
+        { "id": "4", "content": "starry sky", "category": "sight", "type": "text" }
+      ],
+      "solve": "Sensory details allow readers to experience scenes through multiple senses. 'Sharp thorns' and 'burning sand' are touch details, referring to sensations that can be felt, while 'glowing moon' and 'starry sky' are sight details, describing what can be seen in the environment."
+    },
+    {
+      "id": 6,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["smell", "sight"],
+      "options": [
+        { "id": "1", "content": "rotten eggs", "category": "smell", "type": "text" },
+        { "id": "2", "content": "rainbow colors", "category": "sight", "type": "text" },
+        { "id": "3", "content": "fresh flowers", "category": "smell", "type": "text" },
+        { "id": "4", "content": "bright stars", "category": "sight", "type": "text" }
+      ],
+      "solve": "Sensory details come in many forms. 'Rotten eggs' and 'fresh flowers' are smell-related, evoking strong odors, while 'rainbow colors' and 'bright stars' are sight-related, describing vibrant visual experiences. Each of these details helps immerse readers in the scene."
+    },
+    {
+      "id": 7,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["touch", "sound"],
+      "options": [
+        { "id": "1", "content": "wet pavement", "category": "touch", "type": "text" },
+        { "id": "2", "content": "roaring waterfall", "category": "sound", "type": "text" },
+        { "id": "3", "content": "fluffy clouds", "category": "touch", "type": "text" },
+        { "id": "4", "content": "whistling wind", "category": "sound", "type": "text" }
+      ],
+      "solve": "Sensory details evoke specific reactions. 'Wet pavement' and 'fluffy clouds' describe touch sensations, such as the feeling of wetness or softness, while 'roaring waterfall' and 'whistling wind' are auditory details that describe the sounds of nature."
+    },
+    {
+      "id": 8,
+      "type": "sensory-details",
+      "contentType": "text",
+      "question": "Sort the sensory details.",
+      "categories": ["sight", "taste"],
+      "options": [
+        { "id": "1", "content": "spicy chili", "category": "taste", "type": "text" },
+        { "id": "2", "content": "glittering snow", "category": "sight", "type": "text" },
+        { "id": "3", "content": "sweet strawberries", "category": "taste", "type": "text" },
+        { "id": "4", "content": "icy mountains", "category": "sight", "type": "text" }
+      ],
+      "solve": "Sensory details enrich the narrative. 'Spicy chili' and 'sweet strawberries' describe tastes, offering flavor sensations, while 'glittering snow' and 'icy mountains' provide sight details, painting vivid visual images of cold, sparkling environments."
+    }
+  ],
+  "sensoryExamples": {
+    "sight": [
       {
-        "id": 1,
-        "type": "sensory-details",
-        "question": "Sort the sensory details.",
-        "categories": ["touch", "sight"],
-        "options": [
-          { "id": "1", "content": "pin prick", "category": "touch" },
-          { "id": "2", "content": "chilly night air", "category": "touch" },
-          { "id": "3", "content": "bright red sparks", "category": "sight" },
-          { "id": "4", "content": "shiny copper pan", "category": "sight" }
-        ]
+        "key": "John's face was lit by glowing firelight",
+        "solution": "Visual description creates an image of an illuminated face"
+      }
+    ],
+    "touch": [
+      {
+        "key": "Ted was uncomfortable in his scratchy wool sweater",
+        "solution": "Describes physical sensation against skin"
       },
       {
-        "id": 2,
-        "type": "animals-habitat",
-        "question": "Sort these animals by their habitat.",
-        "categories": ["water", "land"],
-        "options": [
-          { "id": "1", "content": "dolphin", "category": "water" },
-          { "id": "2", "content": "elephant", "category": "land" },
-          { "id": "3", "content": "shark", "category": "water" },
-          { "id": "4", "content": "lion", "category": "land" }
-        ]
-      },
+        "key": "fire-hot iron",
+        "solution": "Temperature sensation that can be felt"
+      }
+    ],
+    "sound": [
       {
-        "id": 3,
-        "type": "parts-of-speech",
-        "question": "Categorize these words by their part of speech.",
-        "categories": ["nouns", "verbs"],
-        "options": [
-          { "id": "1", "content": "run", "category": "verbs" },
-          { "id": "2", "content": "house", "category": "nouns" },
-          { "id": "3", "content": "jump", "category": "verbs" },
-          { "id": "4", "content": "book", "category": "nouns" }
-        ]
+        "key": "chirping birds outside her window",
+        "solution": "Auditory detail that can be heard"
+      }
+    ],
+    "smell": [
+      {
+        "key": "freshly baked bread",
+        "solution": "Describes an aroma that can be smelled"
+      }
+    ],
+    "taste": [
+      {
+        "key": "sharply sour apple",
+        "solution": "Describes flavor sensation on tongue"
       }
     ]
+  },
+  "sensoryExercise": {
+    "id": 3,
+    "type": "sensory-categories",
+    "contentType": "text",
+    "question": "Sort these sensory details into their correct categories",
+    "categories": {
+      "Sight": [
+        { "id": "1", "content": "Glowing firelight", "category": "Sight" },
+        { "id": "6", "content": "Sparkling stars", "category": "Sight" }
+      ],
+      "Sound": [
+        { "id": "2", "content": "Thunder rumbling", "category": "Sound" },
+        { "id": "7", "content": "Whistling wind", "category": "Sound" }
+      ],
+      "Touch": [
+        { "id": "3", "content": "Rough sandpaper", "category": "Touch" },
+        { "id": "8", "content": "Smooth silk", "category": "Touch" }
+      ],
+      "Smell": [
+        { "id": "4", "content": "Fresh coffee", "category": "Smell" },
+        { "id": "9", "content": "Salty ocean breeze", "category": "Smell" }
+      ],
+      "Taste": [
+        { "id": "5", "content": "Sweet honey", "category": "Taste" },
+        { "id": "10", "content": "Spicy pepper", "category": "Taste" }
+      ]
+    },
+    "solve": "Sensory details are categorized based on the senses they evoke. Sight sensory details are things that a reader can imagine seeing, such as the 'glowing firelight' or 'sparkling stars' in the night sky. Sound sensory details refer to things that can be heard, like the 'thunder rumbling' in the distance or the 'whistling wind' in a quiet night. Touch sensory details are those that describe physical sensations, like the 'rough sandpaper' that feels abrasive or the 'smooth silk' that feels soft and cool. Smell sensory details involve describing aromas, like the 'fresh coffee' scent in the morning or the 'salty ocean breeze' felt by a beachgoer. Taste sensory details are those that involve flavor, such as the sweetness of 'honey' or the sharpness of 'spicy pepper' that can be felt on the tongue."
   }
+}

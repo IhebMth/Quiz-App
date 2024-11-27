@@ -25,7 +25,7 @@ const FinalResults = ({ results, exercises, onRestart }) => {
           <div className="bg-blue-50 p-4 sm:p-6 rounded-lg text-center">
             <p className="text-gray-600 text-xs sm:text-sm mb-1">Final Score</p>
             <p className="text-2xl sm:text-3xl font-bold text-blue-600">
-              {Math.round(results.finalScore)}%
+              {Math.round(results.finalScore)} / 100
             </p>
           </div>
           <div className="bg-blue-50 p-4 sm:p-6 rounded-lg text-center">
@@ -41,7 +41,7 @@ const FinalResults = ({ results, exercises, onRestart }) => {
           <div className="flex items-center justify-between p-3 sm:p-4 bg-green-50 rounded-lg">
             <span className="text-green-600 text-sm sm:text-base font-medium">Correct Answers</span>
             <span className="text-xl sm:text-2xl font-bold text-green-600">
-              {results.correctAnswers}
+              {results.correctAnswers} 
             </span>
           </div>
           <div className="flex items-center justify-between p-3 sm:p-4 bg-red-50 rounded-lg">
