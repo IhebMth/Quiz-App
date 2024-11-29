@@ -13,6 +13,7 @@ import Stats from "../Stats";
 import FinalResults from "../FinalResults";
 import exercisesData from "./data/dragAndDropExercises.json";
 import IncorrectFeedback from "./InCorrectAnswerFeedBackComponent";
+import ExamplePracticeSection from "./exampleSectionDrag";
 
 const DragAndDrop = () => {
   const mouseSensor = useSensor(MouseSensor, {
@@ -67,11 +68,34 @@ const DragAndDrop = () => {
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    if (!over) return;
-
     const draggedItemId = active.id;
-    const targetCategory = over.id;
 
+    if (!over) {
+      // If dropped outside any droppable area, remove from current category
+      let sourceCategory = null;
+      Object.entries(categoryItems).forEach(([category, items]) => {
+        if (items.some((item) => item.id === draggedItemId)) {
+          sourceCategory = category;
+        }
+      });
+
+      if (sourceCategory) {
+        setCategoryItems((prev) => ({
+          ...prev,
+          [sourceCategory]: prev[sourceCategory].filter(
+            (item) => item.id !== draggedItemId
+          ),
+        }));
+        setMovedItems((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(draggedItemId);
+          return newSet;
+        });
+      }
+      return;
+    }
+
+    const targetCategory = over.id;
     let sourceCategory = null;
     Object.entries(categoryItems).forEach(([category, items]) => {
       if (items.some((item) => item.id === draggedItemId)) {
@@ -80,17 +104,19 @@ const DragAndDrop = () => {
     });
 
     if (!sourceCategory) {
+      // From pool to category
       const draggedItem = currentExercise.options?.find(
         (item) => item.id === draggedItemId
       );
       if (draggedItem) {
-        setMovedItems((prev) => new Set([...prev, draggedItemId]));
         setCategoryItems((prev) => ({
           ...prev,
           [targetCategory]: [...prev[targetCategory], draggedItem],
         }));
+        setMovedItems((prev) => new Set(prev).add(draggedItemId));
       }
     } else if (sourceCategory !== targetCategory) {
+      // Between categories
       setCategoryItems((prev) => {
         const draggedItem = prev[sourceCategory].find(
           (item) => item.id === draggedItemId
@@ -103,7 +129,6 @@ const DragAndDrop = () => {
           [targetCategory]: [...prev[targetCategory], draggedItem],
         };
       });
-      setMovedItems((prev) => new Set([...prev, draggedItemId]));
     }
   };
 
@@ -202,10 +227,10 @@ const DragAndDrop = () => {
   );
 
   return (
-    <div className="min-h-screen p-4">
-      <div className="relative flex bg-white  sm:p-12 rounded-xl shadow-xl min-h-[800px] max-w-[1400px] mx-auto">
-        {/* Desktop Stats - absolutely positioned in the top right */}
-        <div className="hidden sm:block absolute top-8 right-8 z-10 w-[100px]"> {/* Stats container for desktop */}
+    <div className="min-h-screen p-0 sm:p-4">
+      <div className="relative flex sm:bg-white sm:p-12 sm:rounded-xl sm:shadow-xl max-w-[1400px] mx-auto">
+
+        <div className="hidden sm:block absolute top-8 right-8 z-10 w-[100px]">
           <Stats
             questionNumber={currentExerciseIndex + 1}
             totalQuestions={totalExercises}
@@ -213,12 +238,10 @@ const DragAndDrop = () => {
             score={score}
           />
         </div>
-  
-        {/* Main content area */}
-        <div className="flex-1 sm:pr-[80px]"> {/* Only apply right padding on desktop */}
-          <div className="relative">
-            {/* Mobile Stats */}
-            <div className="sm:hidden">
+
+        <div className="flex-1 sm:pr-[80px] w-full">
+          <div className="relative w-full">
+            <div className="sm:hidden w-full">
               <Stats
                 questionNumber={currentExerciseIndex + 1}
                 totalQuestions={totalExercises}
@@ -226,8 +249,10 @@ const DragAndDrop = () => {
                 score={score}
               />
             </div>
-  
-            <div className="p-4 sm:p-8 max-w-[1000px] mx-auto"> {/* Adjusted width */}
+            <div className="hidden sm:block">
+            <ExamplePracticeSection />
+            </div>
+            <div className="sm:p-8 max-w-[1000px] mx-auto w-full">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-8">
                   {currentExercise.question}
@@ -244,42 +269,47 @@ const DragAndDrop = () => {
                   onGotIt={handleGotIt}
                   sensoryExamples={sensoryExamples}
                 />
-                <div className="grid grid-cols-2 gap-6 mb-8">
-                  {currentExercise.options.map((item) =>
-                    !placedItems.has(item.id) ? (
-                      <div
-                        key={item.id}
-                        className={`transform transition-all duration-300
-                          hover:-translate-y-1 
-                          ${movedItems.has(item.id) ? "scale-105" : ""}
-                        `}
-                      >
-                        <DraggableItem
-                          id={item.id}
-                          content={item.content}
-                          type={item.type || "text"}
-                          label={item.label}
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        key={item.id}
-                        className="p-6 sm:p-8 bg-gray-200 rounded-md text-center text-gray-400"
-                      >
-                        <span></span>
-                      </div>
-                    )
-                  )}
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 mb-8 w-full px-2 sm:px-0">
+                {currentExercise.options.map((item) =>
+  !placedItems.has(item.id) ? (
+    <div
+      key={item.id}
+      className={`transform transition-all duration-300
+        hover:-translate-y-1 
+        ${movedItems.has(item.id) ? "scale-105" : ""}
+        w-full
+      `}
+    >
+      <DraggableItem
+        id={item.id}
+        content={item.content}
+        type={item.type || "text"}
+        label={item.label}
+      />
+    </div>
+  ) : (
+    <div
+      key={item.id}
+      className={`p-4 rounded-md text-center w-full ${
+        item.type === "text" || !item.type ? "bg-gray-200 text-gray-400" : ""
+      }`}
+    >
+      <span></span>
+    </div>
+  )
+)}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-10">
-                  {currentExercise.categories.map((category) => (
-                    <DroppableZone
-                      key={category}
-                      id={category}
-                      label={category}
-                      items={categoryItems[category] || []}
-                    />
-                  ))}
+                <div className="grid grid-cols-1 gap-4 sm:gap-8 w-full">
+                  <div className="flex flex-row gap-2 sm:gap-8 w-full px-2">
+                    {currentExercise.categories.map((category) => (
+                      <DroppableZone
+                        key={category}
+                        id={category}
+                        label={category}
+                        items={categoryItems[category] || []}
+                      />
+                    ))}
+                  </div>
                 </div>
                 <div className="flex justify-center pt-4">
                   <button
@@ -289,10 +319,12 @@ const DragAndDrop = () => {
                       bg-gradient-to-r from-blue-500 to-blue-600
                       hover:from-blue-600 hover:to-blue-700
                       disabled:from-gray-400 disabled:to-gray-500
-                      text-white font-semibold py-4 px-10
+                      text-white font-semibold sm:py-4 py-2 px-10
                       rounded-xl text-lg
                       transform transition-all duration-200
-                      hover:-translate-y-1 hover:shadow-lg"
+                      hover:-translate-y-1 hover:shadow-lg
+                      sm:w-auto
+                    "
                   >
                     Check Answers
                   </button>
@@ -304,9 +336,6 @@ const DragAndDrop = () => {
       </div>
     </div>
   );
-  
-  
-
 };
 
 export default DragAndDrop;
