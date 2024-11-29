@@ -1,4 +1,4 @@
-import ExampleSectionDrag from './ExampleSectionDrag';
+import ExampleSectionDrag from './exampleSectionDrag';
 import DragAndDrop from './DragAndDrop';
 import exerciseData from './data/dragAndDropExercises.json';
 
