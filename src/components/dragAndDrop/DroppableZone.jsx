@@ -6,12 +6,22 @@ import DraggableItem from './DraggableItem';
 const DroppableZone = ({ id, label, items = [] }) => {
     const { isOver, setNodeRef } = useDroppable({ id });
     
+    // Calculate height per item based on total items
+    const getItemHeight = () => {
+        const totalItems = Math.max(items.length, 4); // Minimum 4 slots
+        const containerHeight = 400; // Fixed container height
+        const padding = 32; // Account for padding
+        const gap = (totalItems - 1) * 8; // Gap between items
+        return (containerHeight - padding - gap) / totalItems;
+    };
+
     return (
         <div
             ref={setNodeRef}
             className={`border-2 rounded-lg transition-colors duration-200 flex-1 w-[100px] sm:min-w-[150px] ${
                 isOver ? 'border-blue-500 bg-blue-50' : 'border-blue-300 bg-transparent'
             }`}
+            style={{ height: '400px' }}
         >
             <div
                 className={`text-gray-700 font-medium text-center py-2 border-b-2 ${
@@ -21,7 +31,7 @@ const DroppableZone = ({ id, label, items = [] }) => {
                 <span className="capitalize text-xs sm:text-base">{label}</span>
                 <span className="ml-1 text-xs text-gray-500">({items.length})</span>
             </div>
-            <div className="text-center min-h-[100px] sm:min-h-[200px] p-1 sm:p-4 grid grid-cols-1 gap-2">
+            <div className="text-center p-4 grid grid-cols-1 gap-2 h-[calc(400px-2.5rem)]">
                 <AnimatePresence>
                     {items.map((item) => (
                         <motion.div
@@ -31,6 +41,7 @@ const DroppableZone = ({ id, label, items = [] }) => {
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
                             className="w-full"
+                            style={{ height: `${getItemHeight()}px` }}
                         >
                             <DraggableItem
                                 id={item.id}
@@ -38,7 +49,7 @@ const DroppableZone = ({ id, label, items = [] }) => {
                                 type={item.type}
                                 label={item.label}
                                 isOriginalPosition={false}
-                                className="w-full"
+                                className="w-full h-full"
                             />
                         </motion.div>
                     ))}
