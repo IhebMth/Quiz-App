@@ -9,7 +9,7 @@ const DroppableZone = ({ id, label, items = [] }) => {
     // Calculate height per item based on total items
     const getItemHeight = () => {
         const totalItems = Math.max(items.length, 4); // Minimum 4 slots
-        const containerHeight = 400; // Fixed container height
+        const containerHeight = 410; // Fixed container height
         const padding = 32; // Account for padding
         const gap = (totalItems - 1) * 8; // Gap between items
         return (containerHeight - padding - gap) / totalItems;
