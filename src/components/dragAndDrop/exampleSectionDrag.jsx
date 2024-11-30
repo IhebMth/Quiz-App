@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
@@ -8,12 +8,15 @@ const ExamplePracticeSection = ({ children, data }) => {
   const sectionRef = useRef(null);
 
   const toggleMode = () => {
-    setMode(prev => prev === "practice" ? "example" : "practice");
-    
+    setMode((prev) => (prev === "practice" ? "example" : "practice"));
+  };
+
+  // Scroll to the section only when mode changes, and avoid redundant scrolling
+  useEffect(() => {
     if (sectionRef.current) {
       sectionRef.current.scrollIntoView({ behavior: "smooth" });
     }
-  };
+  }, [mode]); // This will only run when the mode changes
 
   const ExampleItem = ({ text }) => (
     <motion.div
@@ -48,7 +51,7 @@ const ExamplePracticeSection = ({ children, data }) => {
           by the sense they appeal to.
         </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
           {Object.entries(data.sensoryExercise.categories).map(
             ([category, items]) => (
               <div
@@ -147,7 +150,7 @@ const ExamplePracticeSection = ({ children, data }) => {
     <div ref={sectionRef} className="w-full max-w-4xl mx-auto">
       <button
         onClick={toggleMode}
-        className="flex items-center justify-between w-full px-4 py-2 mb-4 text-lg font-medium text-blue-500 bg-white border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
+        className="flex items-center justify-between w-full px-4 py-2 mb-4  text-lg font-medium text-blue-500 bg-white border-2 border-blue-500 rounded-lg hover:bg-blue-50 transition-colors"
       >
         {mode === "practice" ? "Learn with an example" : "Back to practice"}
         {mode === "practice" ? (

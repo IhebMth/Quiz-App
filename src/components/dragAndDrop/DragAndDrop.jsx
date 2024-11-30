@@ -13,14 +13,22 @@ import Stats from "../Stats";
 import FinalResults from "../FinalResults";
 import exercisesData from "./data/dragAndDropExercises.json";
 import IncorrectFeedback from "./InCorrectAnswerFeedBackComponent";
-import ExamplePracticeSection from "./exampleSectionDrag";
 
 const DragAndDrop = () => {
   const mouseSensor = useSensor(MouseSensor, {
-    activationConstraint: { distance: 10 },
+    // Activate with minimal movement for hold-to-drag
+    activationConstraint: {
+      distance: 4, // Small distance threshold
+      delay: 0 // No delay for hold-to-drag
+    }
   });
+  
   const touchSensor = useSensor(TouchSensor, {
-    activationConstraint: { delay: 250, tolerance: 5 },
+    // More forgiving settings for touch devices
+    activationConstraint: {
+      delay: 100, // Small delay for touch to differentiate tap from drag
+      tolerance: 5 // Small movement tolerance
+    }
   });
   const sensors = useSensors(mouseSensor, touchSensor);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -228,7 +236,7 @@ const DragAndDrop = () => {
 
   return (
     <div className="min-h-screen p-0 sm:p-4">
-      <div className="relative flex sm:bg-white sm:p-12 sm:rounded-xl sm:shadow-xl max-w-[1400px] mx-auto">
+      <div className="relative flex  sm:p-12  max-w-[1400px] mx-auto">
 
         <div className="hidden sm:block absolute top-8 right-8 z-10 w-[100px]">
           <Stats
@@ -249,9 +257,7 @@ const DragAndDrop = () => {
                 score={score}
               />
             </div>
-            <div className="hidden sm:block">
-            <ExamplePracticeSection />
-            </div>
+            
             <div className="sm:p-8 max-w-[1000px] mx-auto w-full">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-8">

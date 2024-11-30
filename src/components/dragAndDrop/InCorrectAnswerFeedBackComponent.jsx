@@ -59,6 +59,40 @@ CategoryZone.propTypes = {
   className: PropTypes.string,
 };
 
+const Flag3D = ({ text, color }) => (
+  <div className="absolute -left-1 top-1/2 transform -translate-y-1/2">
+    {/* Main notebook face */}
+    <div className={`w-10 min-h-28 ${color} text-white flex items-center justify-center font-medium text-xs sm:text-sm rounded-r-lg relative shadow-lg`}>
+      {/* Rotated text */}
+      <span className="transform rotate-90 whitespace-nowrap">{text}</span>
+      
+      {/* Notebook spine */}
+      <div className="absolute -left-1 top-0 bottom-0 w-1 bg-black/10"></div>
+      
+      {/* Spiral binding holes */}
+      <div className="absolute -left-2 top-1 bottom-1 w-1 flex flex-col justify-evenly">
+        {[...Array(7)].map((_, i) => (
+          <div key={i} className="h-1 w-1 rounded-full bg-gray-200"></div>
+        ))}
+      </div>
+      
+      {/* 3D side effect */}
+      <div className={`absolute top-0 -left-2 w-2 h-full ${color} brightness-75 skew-y-[45deg] origin-top`}></div>
+      
+      {/* Bottom edge */}
+      <div className={`absolute bottom-0 -left-2 w-2 h-2 ${color} brightness-50 skew-x-[45deg] origin-bottom`}></div>
+      
+      {/* Paper edge effect */}
+      <div className="absolute inset-y-1 right-1 w-0.5 bg-white/10"></div>
+    </div>
+  </div>
+);
+
+Flag3D.propTypes = {
+  text: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+};
+
 const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, sensoryExamples }) => {
   if (!isVisible) return null;
 
@@ -73,18 +107,14 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
         {/* Header */}
         <div className="flex items-center space-x-2 text-red-600">
           <AlertCircle className="w-6 h-6" />
-          <h2 className="text-xl font-semibold text-base">Sorry, incorrect...</h2>
+          <h2 className="text-xl font-semibold">Sorry, incorrect...</h2>
         </div>
-  
+
         {/* Correct Answer Section */}
         <div className="space-y-4 border border-gray-300 p-5 relative">
-          {/* Flag design on the left side with vertical text */}
-          <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-10 min-h-28 bg-green-600 text-white flex items-center justify-center font-medium text-xs sm:text-sm rounded-r-lg">
-            <span className="transform rotate-90 whitespace-nowrap">Correct Answer</span>
-          </div>
-  
+          <Flag3D text="Correct Answer" color="bg-green-600" />
           <h3 className="font-medium text-sm sm:text-base">The correct answer is:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-6"> {/* Added margin-left here */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-8">
             {currentExercise.categories.map((category) => (
               <CategoryZone
                 key={category}
@@ -96,31 +126,23 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
             ))}
           </div>
         </div>
-  
+
         {/* Your Answer Section */}
         <div className="space-y-4 border border-gray-300 p-5 relative">
-          {/* Flag design on the left side with vertical text */}
-          <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-10 min-h-28 bg-red-600 text-white flex items-center justify-center font-medium text-xs sm:text-sm rounded-r-lg">
-            <span className="transform rotate-90 whitespace-nowrap">Your Answer</span>
-          </div>
-  
+          <Flag3D text="Your Answer" color="bg-red-600" />
           <h3 className="font-medium text-sm sm:text-base">You answered:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-6"> {/* Added margin-left here */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ml-8">
             {Object.entries(userAnswers).map(([category, items]) => (
               <CategoryZone key={category} title={category} items={items} />
             ))}
           </div>
         </div>
-  
+
         {/* Sensory Examples Section */}
         {sensoryExamples && (
           <div className="space-y-4 border border-gray-300 p-5 relative">
-            {/* Flag design on the left side with vertical text */}
-            <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-10 min-h-28 bg-yellow-600 text-white flex items-center justify-center font-medium text-xs sm:text-sm rounded-r-lg">
-              <span className="transform rotate-90 whitespace-nowrap">Sensory Details</span>
-            </div>
-  
-            <p className="text-gray-700 mb-6 ml-6 text-xs sm:text-sm">
+            <Flag3D text="Sensory Details" color="bg-yellow-600" />
+            <p className="text-gray-700 mb-6 ml-8 text-xs sm:text-sm">
               When you write, you can use <strong>sensory details</strong> to
               make stories and scenes easier for the reader to imagine. A
               sensory detail makes the reader imagine a particular sight, sound,
@@ -128,7 +150,7 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
             </p>
             {Object.keys(sensoryExamples).map((sensoryType) => (
               <div key={sensoryType}>
-                <p className="text-sm sm:text-base text-gray-700 ml-6">
+                <p className="text-sm sm:text-base text-gray-700 ml-8">
                   {sensoryExamples[sensoryType].map((example, index) => (
                     <span key={index} className="block mb-2 text-xs sm:text-sm">
                       <strong>{sensoryType}:</strong> {example.key} – {example.solution}
@@ -139,24 +161,19 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
             ))}
           </div>
         )}
-  
+
         {/* Solve Section */}
         {currentExercise.solve && (
           <div className="space-y-4 border border-gray-300 p-5 relative">
-            {/* Flag design on the left side with vertical text */}
-            <div className="absolute -left-6 top-1/2 transform -translate-y-1/2 w-10 min-h-28  bg-blue-600 text-white flex items-center justify-center font-medium text-xs sm:text-sm rounded-r-lg">
-              <span className="transform rotate-90 whitespace-nowrap">Solve</span> {/* Vertically rotated text */}
-            </div>
-  
-            {/* Content section */}
-            <p className="text-gray-700 ml-6 text-xs sm:text-sm">{currentExercise.solve}</p> {/* Added left margin to avoid overlap */}
+            <Flag3D text="Solve" color="bg-blue-600" />
+            <p className="text-gray-700 ml-8 text-xs sm:text-sm">{currentExercise.solve}</p>
           </div>
         )}
-  
+
         {/* Got It Button */}
         <button
           className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors text-xs sm:text-sm"
-          onClick={onGotIt} // Call the onGotIt prop when clicked
+          onClick={onGotIt}
         >
           Got It
         </button>
@@ -177,7 +194,7 @@ IncorrectFeedback.propTypes = {
         label: PropTypes.string,
       })
     ).isRequired,
-    solve: PropTypes.string, // Add the solve field
+    solve: PropTypes.string,
   }).isRequired,
   userAnswers: PropTypes.objectOf(
     PropTypes.arrayOf(
