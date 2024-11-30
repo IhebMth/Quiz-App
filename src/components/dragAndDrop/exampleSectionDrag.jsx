@@ -150,7 +150,7 @@ const ExamplePracticeSection = ({ children, data }) => {
     <div ref={sectionRef} className="w-full max-w-4xl mx-auto">
     <button
   onClick={toggleMode}
-  className="flex items-center justify-between w-full px-4 py-2 mb-4 text-lg font-medium text-blue-500  border-b-2 border-b-blue-500 transition-colors"
+  className="flex items-center justify-between w-full px-4 py-2 mb-8 lg:-mb-10  md:-mb-10 text-lg font-medium text-blue-500  border-b-2 border-b-blue-500 transition-colors"
 >
   {mode === "practice" ? "Learn with an example" : "Back to practice"}
   {mode === "practice" ? (
