@@ -8,7 +8,7 @@ const App = () => {
     <Router>
       <div className="min-h-screen sm:bg-gradient-to-br from-blue-500 via-blue-300 to-green-300">
         <Navbar />
-        <div className="p-6">
+        <div className="">
           <Routes>
             <Route path="/drag-and-drop" element={<DragAndDropWithExample />} />
           </Routes>

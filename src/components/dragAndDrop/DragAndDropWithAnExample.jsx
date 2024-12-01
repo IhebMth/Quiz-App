@@ -9,7 +9,7 @@ const DragAndDropWithExample = () => {
       
 
       {/* DragAndDrop component stays as it is */}
-      <div className="bg-white sm:mx-10">
+      <div className="bg-white  sm:mx-20">
       <div className='w-auto pt-10  '>
         <ExampleSectionDrag data={exerciseData} />
       </div>

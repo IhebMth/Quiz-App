@@ -16,20 +16,18 @@ import IncorrectFeedback from "./InCorrectAnswerFeedBackComponent";
 
 const DragAndDrop = () => {
   const mouseSensor = useSensor(MouseSensor, {
-    // Activate with minimal movement for hold-to-drag
     activationConstraint: {
-      distance: 4, // Small distance threshold
-      delay: 0 // No delay for hold-to-drag
-    }
+      distance: 0,
+    },
   });
-  
+
   const touchSensor = useSensor(TouchSensor, {
-    // More forgiving settings for touch devices
     activationConstraint: {
-      delay: 100, // Small delay for touch to differentiate tap from drag
-      tolerance: 5 // Small movement tolerance
-    }
+      delay: 0,
+      tolerance: 0,
+    },
   });
+
   const sensors = useSensors(mouseSensor, touchSensor);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [categoryItems, setCategoryItems] = useState({});
@@ -53,6 +51,7 @@ const DragAndDrop = () => {
   const totalExercises = exercisesData.exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
 
+  // Reset state when exercise changes
   useEffect(() => {
     if (currentExercise) {
       const initialCategories = {};
@@ -65,6 +64,7 @@ const DragAndDrop = () => {
     }
   }, [currentExerciseIndex]);
 
+  // Timer effect
   useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
@@ -78,8 +78,8 @@ const DragAndDrop = () => {
     const { active, over } = event;
     const draggedItemId = active.id;
 
+    // Handle dropping outside any zone (return to initial state)
     if (!over) {
-      // If dropped outside any droppable area, remove from current category
       let sourceCategory = null;
       Object.entries(categoryItems).forEach(([category, items]) => {
         if (items.some((item) => item.id === draggedItemId)) {
@@ -104,6 +104,8 @@ const DragAndDrop = () => {
     }
 
     const targetCategory = over.id;
+
+    // Check if item is already in a category
     let sourceCategory = null;
     Object.entries(categoryItems).forEach(([category, items]) => {
       if (items.some((item) => item.id === draggedItemId)) {
@@ -111,8 +113,8 @@ const DragAndDrop = () => {
       }
     });
 
+    // Handle moving from initial pool to category
     if (!sourceCategory) {
-      // From pool to category
       const draggedItem = currentExercise.options?.find(
         (item) => item.id === draggedItemId
       );
@@ -123,8 +125,9 @@ const DragAndDrop = () => {
         }));
         setMovedItems((prev) => new Set(prev).add(draggedItemId));
       }
-    } else if (sourceCategory !== targetCategory) {
-      // Between categories
+    }
+    // Handle moving between categories
+    else if (sourceCategory !== targetCategory) {
       setCategoryItems((prev) => {
         const draggedItem = prev[sourceCategory].find(
           (item) => item.id === draggedItemId
@@ -145,6 +148,30 @@ const DragAndDrop = () => {
       (acc, items) => acc + items.length,
       0
     );
+  };
+
+  // Reset an individual item to initial state
+  const handleResetItem = (itemId) => {
+    let sourceCategory = null;
+    Object.entries(categoryItems).forEach(([category, items]) => {
+      if (items.some((item) => item.id === itemId)) {
+        sourceCategory = category;
+      }
+    });
+
+    if (sourceCategory) {
+      setCategoryItems((prev) => ({
+        ...prev,
+        [sourceCategory]: prev[sourceCategory].filter(
+          (item) => item.id !== itemId
+        ),
+      }));
+      setMovedItems((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(itemId);
+        return newSet;
+      });
+    }
   };
 
   const checkAnswers = () => {
@@ -235,10 +262,9 @@ const DragAndDrop = () => {
   );
 
   return (
-    <div className="min-h-screen p-0 sm:p-4">
-      <div className="relative flex  sm:p-12  max-w-[1400px] mx-auto">
-
-        <div className="hidden sm:block absolute top-8 right-8 z-10 w-[100px]">
+    <div className="min-h-screen  sm:p-4">
+      <div className="relative flex sm:p-12 max-w-[1400px] mx-auto">
+        <div className="hidden sm:block absolute top-8 right-3 z-10 w-[100px]">
           <Stats
             questionNumber={currentExerciseIndex + 1}
             totalQuestions={totalExercises}
@@ -257,17 +283,19 @@ const DragAndDrop = () => {
                 score={score}
               />
             </div>
-            
+
             <div className="sm:p-8 max-w-[1000px] mx-auto w-full">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-8">
                   {currentExercise.question}
                 </h1>
+                
                 <Feedback
                   isVisible={showCorrectFeedback}
                   isCorrect={isCorrect}
                   questionNumber={currentExerciseIndex + 1}
                 />
+                
                 <IncorrectFeedback
                   isVisible={showIncorrectFeedback}
                   currentExercise={currentExercise}
@@ -275,49 +303,55 @@ const DragAndDrop = () => {
                   onGotIt={handleGotIt}
                   sensoryExamples={sensoryExamples}
                 />
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 mb-8 w-full px-2 sm:px-0">
-                {currentExercise.options.map((item) =>
-  !placedItems.has(item.id) ? (
-    <div
-      key={item.id}
-      className={`transform transition-all duration-300
-        hover:-translate-y-1 
-        ${movedItems.has(item.id) ? "scale-105" : ""}
-        w-full
-      `}
-    >
-      <DraggableItem
-        id={item.id}
-        content={item.content}
-        type={item.type || "text"}
-        label={item.label}
-      />
-    </div>
-  ) : (
-    <div
-      key={item.id}
-      className={`p-4 rounded-md text-center w-full ${
-        item.type === "text" || !item.type ? "bg-gray-200 text-gray-400" : ""
-      }`}
-    >
-      <span></span>
-    </div>
-  )
-)}
+
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 mb-8 w-full  sm:px-0">
+                  {currentExercise.options.map((item) =>
+                    !placedItems.has(item.id) ? (
+                      <div
+                        key={item.id}
+                        className={`transform transition-all duration-300
+                          hover:-translate-y-1 
+                          ${movedItems.has(item.id) ? "scale-105" : ""}
+                          w-full
+                        `}
+                      >
+                        <DraggableItem
+                          id={item.id}
+                          content={item.content}
+                          type={item.type || "text"}
+                          label={item.label}
+                        />
+                      </div>
+                    ) : (
+                      <>
+                      <div
+                      key={item.id}
+                      className={`p-4 rounded-md text-center w-full ${
+                        item.type === "text" || !item.type ? "bg-gray-200 text-gray-400" : ""
+                      }`}
+                    >
+                      <span></span>
+                      </div>
+                      </>
+                    )
+                  )}
                 </div>
-                <div className="grid grid-cols-1 gap-4 sm:gap-8 w-full">
-                  <div className="flex flex-row gap-2 sm:gap-8 w-full px-2">
+
+                <div className="grid grid-cols-1 gap-2 sm:gap-8 w-full px-2">
+                  <div className="flex flex-row gap-3 sm:gap-8 w-full ">
                     {currentExercise.categories.map((category) => (
                       <DroppableZone
                         key={category}
                         id={category}
                         label={category}
                         items={categoryItems[category] || []}
+                        onResetItem={handleResetItem}
                       />
                     ))}
                   </div>
                 </div>
-                <div className="flex justify-center pt-4">
+
+                <div className="flex justify-center mt-8">
                   <button
                     onClick={checkAnswers}
                     disabled={getAllPlacedItems() !== currentExercise.options.length}
