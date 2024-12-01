@@ -2,46 +2,17 @@ import PropTypes from 'prop-types';
 import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 
-
+// MetallicRibbon component remains the same
 const MetallicRibbon = ({ text, color, gradientFrom, gradientTo }) => (
   <div className="block absolute -top-3 right-0  overflow-visible">
-    {/* Main ribbon */}
-    <div
-      className={`
-        relative w-32 h-12 ${color}
-        flex items-center justify-center 
-        shadow-lg
-        rotate-0
-      `}
-    >
-      {/* Metallic gradient overlay */}
-      <div
-        className={`
-          absolute inset-10
-          bg-gradient-to-r from-${gradientFrom} to-${gradientTo} 
-          opacity-50
-        `}
-      ></div>
-
-      {/* Text */}
-      <span className="relative text-white font-semibold text-xs sm:text-sm tracking-wider">
-        {text}
-      </span>
-
-      {/* Shine effect */}
+    <div className={`relative w-32 h-12 ${color} flex items-center justify-center shadow-lg rotate-0`}>
+      <div className={`absolute inset-10 bg-gradient-to-r from-${gradientFrom} to-${gradientTo} opacity-50`}></div>
+      <span className="relative text-white font-semibold text-xs sm:text-sm tracking-wider">{text}</span>
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
-
-      
-
-      {/* Edge highlight */}
       <div className="absolute inset-y-0 right-0 w-px bg-white opacity-30"></div>
     </div>
   </div>
 );
-
-
-
-
 
 MetallicRibbon.propTypes = {
   text: PropTypes.string.isRequired,
@@ -50,6 +21,7 @@ MetallicRibbon.propTypes = {
   gradientTo: PropTypes.string.isRequired,
 };
 
+// ReadOnlyItem component remains the same
 const ReadOnlyItem = ({ content, type, label }) => (
   <div className="relative p-2 cursor-pointer">
     {type === 'image' ? (
@@ -82,7 +54,7 @@ const CategoryZone = ({ title, items = [], className = '' }) => (
     <div className="border-b-2 border-blue-300 bg-transparent px-4 py-2 font-medium text-sm">
       {title}
     </div>
-    <div className="p-4 min-h-[100px] grid grid-cols-2 gap-4">
+    <div className="p-4 min-h-[100px] grid grid-row-2 gap-4">  {/* Removed sm: breakpoint */}
       {items.map((item, index) => (
         <ReadOnlyItem key={index} content={item.content} type={item.type} label={item.label} />
       ))}
@@ -102,6 +74,7 @@ CategoryZone.propTypes = {
   className: PropTypes.string,
 };
 
+// Main IncorrectFeedback component remains the same with updated grid classes
 const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, sensoryExamples }) => {
   if (!isVisible) return null;
 
@@ -123,7 +96,7 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
         <div className="space-y-4 border border-gray-300 p-5 mt-4 relative">
           <MetallicRibbon text="Correct Answer" color="bg-green-600" gradientFrom="green-400" gradientTo="green-800" />
           <h3 className="font-medium text-sm sm:text-base mt-8">The correct answer is:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4"> {/* Removed sm: breakpoint */}
             {currentExercise.categories.map((category) => (
               <CategoryZone
                 key={category}
@@ -135,10 +108,10 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
         </div>
 
         {/* Your Answer Section */}
-        <div className="space-y-4 border border-gray-300 p-5 relative ">
+        <div className="space-y-4 border border-gray-300 p-5 relative">
           <MetallicRibbon text="Your Answer" color="bg-red-500" gradientFrom="red-400" gradientTo="red-800" />
           <h3 className="font-medium text-sm sm:text-base mt-8">You answered:</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4"> {/* Removed sm: breakpoint */}
             {Object.entries(userAnswers).map(([category, items]) => (
               <CategoryZone key={category} title={category} items={items} />
             ))}
@@ -147,9 +120,9 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
 
         {/* Sensory Examples Section */}
         {sensoryExamples && (
-          <div className="space-y-4 border  border-gray-300 p-5 relative ">
+          <div className="space-y-4 border border-gray-300 p-5 relative">
             <MetallicRibbon text="Sensory Details" color="bg-yellow-600" gradientFrom="yellow-400" gradientTo="yellow-800" />
-            <p className="text-gray-700  text-xs sm:text-sm pt-3 ">
+            <p className="text-gray-700 text-xs sm:text-sm pt-3">
               When you write, you can use <strong>sensory details</strong> to make stories and scenes easier for the
               reader to imagine. A sensory detail makes the reader imagine a particular sight, sound, smell, taste, or
               touch.
@@ -168,7 +141,7 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
 
         {/* Solve Section */}
         {currentExercise.solve && (
-          <div className="space-y-4 border border-gray-300 p-5 relative ">
+          <div className="space-y-4 border border-gray-300 p-5 relative">
             <MetallicRibbon text="Solve" color="bg-blue-600" gradientFrom="blue-400" gradientTo="blue-800" />
             <p className="text-gray-700 text-xs sm:text-sm pt-3">{currentExercise.solve}</p>
           </div>
