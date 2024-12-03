@@ -47,8 +47,8 @@ const DraggableItem = ({ id, content, type, label }) => {
         </div>
       ) : (
         <div className={`
-          p-2 bg-blue-500 text-white text-sm font-medium
-          min-h-[1.5rem] flex items-center justify-center rounded-md
+            p-3 w-auto  max-w-64   bg-blue-500 text-white text-sm font-medium
+          min-h-[1.5rem] mx-auto flex items-center justify-center rounded-md
           transition-colors duration-200
           ${isDragging ? 'bg-blue-600' : 'hover:bg-blue-550'}
         `}>

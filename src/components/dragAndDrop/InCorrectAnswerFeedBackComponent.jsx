@@ -4,8 +4,8 @@ import { AlertCircle } from 'lucide-react';
 
 // MetallicRibbon component remains the same
 const MetallicRibbon = ({ text, color, gradientFrom, gradientTo }) => (
-  <div className="block absolute -top-3 right-0  overflow-visible">
-    <div className={`relative w-32 h-12 ${color} flex items-center justify-center shadow-lg rotate-0`}>
+  <div className="block absolute -top-3 right-1/4 overflow-visible">
+    <div className={`relative min-w-32 w-auto h-auto p-3 ${color} flex items-center justify-center shadow-lg rotate-0`}>
       <div className={`absolute inset-10 bg-gradient-to-r from-${gradientFrom} to-${gradientTo} opacity-50`}></div>
       <span className="relative text-white font-semibold text-xs sm:text-sm tracking-wider">{text}</span>
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
@@ -93,9 +93,9 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
         </div>
 
         {/* Correct Answer Section */}
-        <div className="space-y-4 border border-gray-300 p-5 mt-4 relative">
+        <div className="space-y-4 border border-gray-300 p-5 mt-4  relative">
           <MetallicRibbon text="Correct Answer" color="bg-green-600" gradientFrom="green-400" gradientTo="green-800" />
-          <h3 className="font-medium text-sm sm:text-base mt-8">The correct answer is:</h3>
+          <h3 className="font-medium text-sm sm:text-base mt-8">Correct answer:</h3>
           <div className="grid grid-cols-2 gap-4"> {/* Removed sm: breakpoint */}
             {currentExercise.categories.map((category) => (
               <CategoryZone
@@ -149,7 +149,7 @@ const IncorrectFeedback = ({ isVisible, currentExercise, userAnswers, onGotIt, s
 
         {/* Got It Button */}
         <button
-          className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors text-xs sm:text-sm"
+          className="flex justify-center w-48 p-2 mx-auto bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition-colors text-xs sm:text-sm"
           onClick={onGotIt}
         >
           Got It

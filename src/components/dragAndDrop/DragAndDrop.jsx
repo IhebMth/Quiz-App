@@ -262,7 +262,7 @@ const DragAndDrop = () => {
   );
 
   return (
-    <div className="min-h-screen  sm:p-4">
+    <div className="min-h-screen sm:p-4">
       <div className="relative flex sm:p-12 max-w-[1400px] mx-auto">
         <div className="hidden sm:block absolute top-8 right-3 z-10 w-[100px]">
           <Stats
@@ -284,9 +284,9 @@ const DragAndDrop = () => {
               />
             </div>
 
-            <div className="sm:p-8 max-w-[1000px] mx-auto w-full">
+            <div className="max-w-[1000px] mx-auto w-full">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-                <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-8">
+                <h1 className="text-xl mx-4 sm:text-3xl font-bold text-green-600 mb-8">
                   {currentExercise.question}
                 </h1>
                 
@@ -304,7 +304,7 @@ const DragAndDrop = () => {
                   sensoryExamples={sensoryExamples}
                 />
 
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 mb-8 w-full  sm:px-0">
+                <div className="grid grid-cols-2 px-5 gap-4  sm:gap-6 mb-8 w-full  sm:px-10">
                   {currentExercise.options.map((item) =>
                     !placedItems.has(item.id) ? (
                       <div
@@ -326,7 +326,7 @@ const DragAndDrop = () => {
                       <>
                       <div
                       key={item.id}
-                      className={`p-4 rounded-md text-center w-full ${
+                      className={`p-3 rounded-md text-center h-10 w-full max-w-64 mx-auto ${
                         item.type === "text" || !item.type ? "bg-gray-200 text-gray-400" : ""
                       }`}
                     >

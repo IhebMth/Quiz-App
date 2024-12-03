@@ -9,7 +9,7 @@
       "options": [
         {
           "id": "1",
-          "content": "/images/dolphin.png",
+          "content": "http://quizappixl.infinityfreeapp.com/wp-content/themes/react-tailwind-theme/dist/images/dolphin.png",
           "label": "Dolphin",
           "category": "water",
           "type": "image"
@@ -17,21 +17,21 @@
         
         {
           "id": "2",
-          "content": "/images/elephant.png",
+          "content": "http://quizappixl.infinityfreeapp.com/wp-content/themes/react-tailwind-theme/dist/images/elephant.png",
           "label": "Elephant",
           "category": "land",
           "type": "image"
         },
         {
           "id": "3",
-          "content": "/images/shark.png",
+          "content": "http://quizappixl.infinityfreeapp.com/wp-content/themes/react-tailwind-theme/dist/images/shark.png",
           "label": "Shark",
           "category": "water",
           "type": "image"
         },
         {
           "id": "4",
-          "content": "/images/lion.png",
+          "content": "http://quizappixl.infinityfreeapp.com/wp-content/themes/react-tailwind-theme/dist/images/lion.png",
           "label": "Lion",
           "category": "land",
           "type": "image"

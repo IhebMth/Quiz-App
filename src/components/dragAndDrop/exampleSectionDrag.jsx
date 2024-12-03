@@ -41,7 +41,7 @@ const ExamplePracticeSection = ({ children, data }) => {
       transition={{ duration: 0.3 }}
       className="overflow-hidden"
     >
-      <div className="bg-white p-6 rounded-lg border-2 border-gray-200 mb-8">
+      <div className="bg-white p-6 sm:mt-14 rounded-lg border-2 border-gray-200 mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           {data.sensoryExercise.question}
         </h2>
@@ -136,10 +136,10 @@ const ExamplePracticeSection = ({ children, data }) => {
   );
 
   return (
-    <div ref={sectionRef} className="w-full max-w-4xl mx-auto">
+    <div ref={sectionRef} className="w-full max-w-5xl mx-auto">
       <button
   onClick={toggleMode}
-  className="flex items-center w-full px-4 py-2 mb-8 lg:-mb-10 md:-mb-10 text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
+  className="flex items-center w-auto px-4 py-2 mx-auto  mb-8 lg:-mb-10 md:-mb-10 text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
   style={{ justifyContent: "space-between" }}
 >
   {mode === "practice" ? "Learn with an example" : "Back to practice"}
