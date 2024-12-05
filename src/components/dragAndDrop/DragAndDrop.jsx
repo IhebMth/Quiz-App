@@ -250,6 +250,7 @@ const DragAndDrop = () => {
           finalScore: score,
         }}
         exercises={exercisesData.exercises}
+        exerciseType="dragAndDrop"
         onRestart={handleRestart}
       />
     );

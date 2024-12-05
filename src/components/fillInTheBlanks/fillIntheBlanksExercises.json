@@ -1,0 +1,33 @@
+{
+  "exercises": [
+    {
+      "id": 1,
+      "type": "word_completion",
+      "question": "Complete the sentence with a word that has the same root as the word in bold.",
+      "sentence": "Something that you can {answer} is {given}",
+      "given": "reversible",
+      "answer": "reverse",
+      "explanation": "The word 'reverse' shares the same root as 'reversible'. When something is reversible, it means it can be reversed."
+    },
+    {
+      "id": 2,
+      "type": "simple_addition",
+      "question": "Add the correct ending to the word.",
+      "sentence": "{given} + {suffix} = {answer}",
+      "given": "tree",
+      "suffix": "s",
+      "answer": "trees",
+      "explanation": "Add -s to form the plural of 'tree'."
+    },
+    {
+      "id": 3,
+      "type": "possessive_hint",
+      "question": "Write the possessive noun. Add 's to clown to show ownership.",
+      "sentence": "The {given} has a balloon. It is the {answer} balloon.",
+      "given": "clown",
+      "hintWord": "clown",
+      "answer": "clown's",
+      "explanation": "Add 's to show that the balloon belongs to the clown."
+    }
+  ]
+}

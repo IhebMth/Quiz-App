@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 
-const FinalResults = ({ results, exercises, onRestart }) => {
+const FinalResults = ({ results, exercises, onRestart, exerciseType }) => {
   const calculateTotalTime = () => {
     if (results.times.length === 0) return 0;
     return results.times.reduce((acc, time) => acc + time, 0);
@@ -9,7 +9,23 @@ const FinalResults = ({ results, exercises, onRestart }) => {
   const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
+  const formatFillInTheBlanks = (exercise, userAnswer) => {
+    if (!exercise || !exercise.sentence) return "Question data missing";
+
+    const formattedSentence = (exercise.sentence || "")
+      .replace("{answer}", userAnswer || "___")
+      .replace("{given}", `<strong>${exercise.given || "___"}</strong>`)
+      .replace("{suffix}", exercise.suffix || "");
+
+    return (
+      <div>
+        <span className="font-medium">{exercise.type || "Question"}: </span>
+        <span dangerouslySetInnerHTML={{ __html: formattedSentence }} />
+      </div>
+    );
   };
 
   return (
@@ -39,43 +55,75 @@ const FinalResults = ({ results, exercises, onRestart }) => {
         {/* Correct/Wrong Answer Summary */}
         <div className="space-y-3 sm:space-y-6 mb-6 sm:mb-8">
           <div className="flex items-center justify-between p-3 sm:p-4 bg-green-50 rounded-lg">
-            <span className="text-green-600 text-sm sm:text-base font-medium">Correct Answers</span>
+            <span className="text-green-600 text-sm sm:text-base font-medium">
+              Correct Answers
+            </span>
             <span className="text-xl sm:text-2xl font-bold text-green-600">
-              {results.correctAnswers} 
+              {results.correctAnswers}
             </span>
           </div>
           <div className="flex items-center justify-between p-3 sm:p-4 bg-red-50 rounded-lg">
-            <span className="text-red-600 text-sm sm:text-base font-medium">Wrong Answers</span>
+            <span className="text-red-600 text-sm sm:text-base font-medium">
+              Wrong Answers
+            </span>
             <span className="text-xl sm:text-2xl font-bold text-red-600">
               {results.wrongAnswers}
             </span>
           </div>
         </div>
 
-        {/* Detailed Question Times */}
+        {/* Detailed Question Results */}
         <div className="space-y-3 sm:space-y-6 mb-6 sm:mb-8">
-          {results.times.map((time, index) => (
-            <div 
-              key={index} 
-              className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 bg-gray-50 rounded-lg gap-2 sm:gap-4"
+          {results.questions.map((result, index) => (
+            <div
+              key={index}
+              className="flex flex-col p-3 sm:p-4 bg-gray-50 rounded-lg gap-2"
             >
-              <span className="text-gray-600 text-sm sm:text-base font-medium">
-                {exercises[index] ? (
-                  <div className="flex items-center gap-2">
-                    <span className="min-w-[20px] h-5 flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold rounded">
-                      {index + 1}
-                    </span>
-                    <span className="line-clamp-2 sm:line-clamp-1">
+              <div className="flex items-start gap-2">
+                <span className="min-w-[20px] h-5 flex items-center justify-center bg-blue-100 text-blue-600 text-xs font-bold rounded">
+                  {index + 1}
+                </span>
+                <div className="flex-1">
+                  {/* Conditionally display details based on exercise type */}
+                  {exerciseType === "fillInTheBlanks" ? (
+                    formatFillInTheBlanks(exercises[index], result.userAnswer)
+                  ) : exerciseType === "dragAndDrop" ? (
+                    <div className="font-medium">
                       {exercises[index].question}
-                    </span>
-                  </div>
-                ) : (
-                  'Unknown Question'
-                )}
-              </span>
-              <span className="text-lg sm:text-xl font-bold text-blue-600 ml-7 sm:ml-0">
-                {formatTime(time)}
-              </span>
+                    </div> // Display only the question for drag and drop exercises
+                  ) : null}
+
+                  {exercises[index]?.answer &&
+                    exerciseType === "fillInTheBlanks" && (
+                      <div className="mt-2 text-sm">
+                        <span className="font-medium text-gray-600">
+                          Correct answer:{" "}
+                        </span>
+                        <span className="text-green-600">
+                          {exercises[index].answer}
+                        </span>
+                      </div>
+                    )}
+
+                  {result.userAnswer && (
+                    <div className="mt-1 text-sm">
+                      <span className="font-medium text-gray-600">
+                        Your answer:{" "}
+                      </span>
+                      <span
+                        className={
+                          result.isCorrect ? "text-green-600" : "text-red-600"
+                        }
+                      >
+                        {result.userAnswer}
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span className="text-sm font-medium text-blue-600">
+                  {formatTime(results.times[index])}
+                </span>
+              </div>
             </div>
           ))}
         </div>
@@ -96,6 +144,12 @@ const FinalResults = ({ results, exercises, onRestart }) => {
 
 FinalResults.propTypes = {
   results: PropTypes.shape({
+    questions: PropTypes.arrayOf(
+      PropTypes.shape({
+        isCorrect: PropTypes.bool.isRequired,
+        userAnswer: PropTypes.string,
+      })
+    ).isRequired,
     times: PropTypes.arrayOf(PropTypes.number).isRequired,
     correctAnswers: PropTypes.number.isRequired,
     wrongAnswers: PropTypes.number.isRequired,
@@ -103,10 +157,16 @@ FinalResults.propTypes = {
   }).isRequired,
   exercises: PropTypes.arrayOf(
     PropTypes.shape({
-      question: PropTypes.string.isRequired,
+      type: PropTypes.string,
+      question: PropTypes.string,
+      sentence: PropTypes.string,
+      given: PropTypes.string,
+      suffix: PropTypes.string,
+      answer: PropTypes.string,
     })
   ).isRequired,
   onRestart: PropTypes.func.isRequired,
+  exerciseType: PropTypes.oneOf(["fillInTheBlanks", "dragAndDrop"]).isRequired,
 };
 
 export default FinalResults;
