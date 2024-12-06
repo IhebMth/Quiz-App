@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Stats from '../Stats';
-import Feedback from '../dragAndDrop/FeedBack';
+import Feedback from '../FeedBack';
 import FinalResults from '../FinalResults';
 import IncorrectFeedback from './IncorrectFillFeedback';
 import exercisesData from './fillInTheBlanksExercises.json';

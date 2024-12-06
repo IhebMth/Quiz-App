@@ -1,8 +1,9 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import './App.css';
 import Navbar from './components/NavBar';
 import DragAndDropWithExample from './components/dragAndDrop/DragAndDropWithAnExample';
-import './App.css';
 import FillInTheBlanksWithExample from './components/fillInTheBlanks/FillInTheBlanksWithAnExample';
+import GapFillWithExample from './components/gapFill/GapFillWithAnExample';
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
           <Routes>
             <Route path="/drag-and-drop" element={<DragAndDropWithExample />} />
             <Route path="/fill-in-the-blanks" element={<FillInTheBlanksWithExample />} />
+            <Route path="/gap-fill" element={<GapFillWithExample />} />
 
           </Routes>
       </div>

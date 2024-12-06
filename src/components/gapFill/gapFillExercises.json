@@ -1,0 +1,82 @@
+{
+    "exercises": [
+      {
+        "id": 1,
+        "word": "dolphin",
+        "image": "/images/dolphin.png",
+        "blanks": [2, 3],
+        "type": "consonant_blend",
+        "question": "Fill in the missing consonant blend",
+        "explanation": "The word 'dolphin' has a consonant blend 'ph' in the middle",
+        "sentence": "The dolphin swam gracefully through the waves",
+        "wordFamily": ["dolphins", "dolphinarium"],
+        "solve": "The letters d-o-l-ph-i-n spell the word dolphin. It has the consonant blend ph in the middle."
+      },
+      {
+        "id": 2,
+        "word": "elephant",
+        "image": "/images/elephant.png",
+        "blanks": [0, 1],
+        "type": "consonant_blend",
+        "question": "Fill in the missing consonant blend",
+        "explanation": "The word 'elephant' has a consonant blend 'el' at the beginning",
+        "sentence": "The elephant walked slowly through the savanna",
+        "wordFamily": ["elephants", "elephantine"],
+        "solve": "The letters e-l-e-ph-a-n-t spell the word elephant. It starts with the consonant blend el."
+      },
+      {
+        "id": 3,
+        "word": "lion",
+        "image": "/images/lion.png",
+        "blanks": [0, 1],
+        "type": "consonant_blend",
+        "question": "Fill in the missing consonant blend",
+        "explanation": "The word 'lion' has a consonant blend 'li' at the beginning",
+        "sentence": "The lion roared loudly in the jungle",
+        "wordFamily": ["lions", "lioness", "lionize"],
+        "solve": "The letters l-i-o-n spell the word lion. It starts with the consonant blend li."
+      }
+    ],
+    "sections": [
+      {
+        "title": "Consonant Blends",
+        "description": "When two consonants appear together and blend their sounds",
+        "examples": [
+          {
+            "word": "stop",
+            "blanks": [0, 1],
+            "explanation": "The 'st' blend creates a combined sound at the start",
+            "image": "/api/placeholder/150/150",
+            "pattern": "Initial consonant blend 'st'",
+            "soundClue": "Sounds like /st/",
+            "commonWords": ["stay", "step", "stick"]
+          },
+          {
+            "word": "jump",
+            "blanks": [2, 3],
+            "explanation": "The 'mp' blend creates a combined sound at the end",
+            "image": "/api/placeholder/150/150",
+            "pattern": "Final consonant blend 'mp'",
+            "soundClue": "Sounds like /mp/",
+            "commonWords": ["bump", "lamp", "camp"]
+          }
+        ]
+      },
+      {
+        "title": "Short Vowels",
+        "description": "Quick vowel sounds in the middle of words",
+        "examples": [
+          {
+            "word": "cat",
+            "blanks": [1],
+            "explanation": "Short 'a' sound in the middle",
+            "image": "/api/placeholder/150/150",
+            "pattern": "CVC pattern with short 'a'",
+            "soundClue": "Sounds like /æ/",
+            "commonWords": ["hat", "bat", "rat"]
+          }
+        ]
+      }
+    ]
+  }
+  

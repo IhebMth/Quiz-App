@@ -8,7 +8,7 @@ import {
 } from "@dnd-kit/core";
 import DraggableItem from "./DraggableItem";
 import DroppableZone from "./DroppableZone";
-import Feedback from "../dragAndDrop/FeedBack";
+import Feedback from "../FeedBack";
 import Stats from "../Stats";
 import FinalResults from "../FinalResults";
 import exercisesData from "./data/dragAndDropExercises.json";
