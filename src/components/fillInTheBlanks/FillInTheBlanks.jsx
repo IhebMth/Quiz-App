@@ -3,7 +3,7 @@ import Stats from "../Stats";
 import Feedback from "../FeedBack";
 import FinalResults from "../FinalResults";
 import IncorrectFeedback from "./IncorrectFillFeedback";
-import exercisesData from "./fillInTheBlanksExercises.json";
+import exercisesData from "./fillnTheBlanksExercises.json";
 
 export default function WordCompletion() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
