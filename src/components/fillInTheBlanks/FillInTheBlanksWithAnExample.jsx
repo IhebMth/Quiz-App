@@ -1,7 +1,7 @@
 // FillInTheBlanksWithExample.jsx
 import ExampleSectionFill from './ExampleSectionFill';
 import FillInTheBlanks from './FillInTheBlanks';
-import exercisesData from './fillInTheBlanksExercises.json'
+import exercisesData from './fillnTheBlanksExercises.json'
 
 const FillInTheBlanksWithExample = () => {
   return (
