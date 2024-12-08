@@ -73,6 +73,15 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
+                    to="/highlight"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
+                    onClick={handleDropdownClose}
+                  >
+                    Highlight
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/multiple-choice"
                     className="block px-4 py-2 hover:bg-blue-100 rounded-b-lg transition duration-300"
                     onClick={handleDropdownClose}

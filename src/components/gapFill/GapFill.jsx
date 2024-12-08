@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef, createRef } from 'react';
-import Stats from '../Stats';
-import Feedback from '../FeedBack';
-import FinalResults from '../FinalResults';
-import IncorrectGapFill from './IncorrectGapFillFeedback';
-import { Volume2 } from 'lucide-react';
-import exercisesData from './gapFillExercises.json';
+import { useState, useEffect, useRef, createRef } from "react";
+import Stats from "../Stats";
+import Feedback from "../FeedBack";
+import FinalResults from "../FinalResults";
+import IncorrectGapFill from "./IncorrectGapFillFeedback";
+import { Volume2 } from "lucide-react";
+import exercisesData from "./gapFillExercises.json";
 
 export default function GapFill() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -33,14 +33,14 @@ export default function GapFill() {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
-        setTimeElapsed(prev => prev + 1);
+        setTimeElapsed((prev) => prev + 1);
       }
     }, 1000);
     return () => clearInterval(timer);
   }, [showFinalResults]);
 
   useEffect(() => {
-    setUserAnswers(new Array(currentExercise.word.length).fill(''));
+    setUserAnswers(new Array(currentExercise.word.length).fill(""));
     inputRefs.current = currentExercise.blanks.map(() => createRef());
   }, [currentExerciseIndex]);
 
@@ -48,7 +48,7 @@ export default function GapFill() {
     const newAnswers = [...userAnswers];
     newAnswers[index] = value.toLowerCase();
     setUserAnswers(newAnswers);
-  
+
     if (value) {
       // Find the next blank index
       const currentBlankIndex = currentExercise.blanks.indexOf(index);
@@ -58,7 +58,6 @@ export default function GapFill() {
       }
     }
   };
-  
 
   const playAudio = () => {
     setIsPlaying(true);
@@ -82,27 +81,27 @@ export default function GapFill() {
         ...results.questions,
         {
           isCorrect: isAnswerCorrect,
-          userAnswer: userAnswers.join(''),
-        }
+          userAnswer: userAnswers.join(""),
+        },
       ],
       times: [...results.times, timeElapsed],
       correctAnswers: results.correctAnswers + (isAnswerCorrect ? 1 : 0),
       wrongAnswers: results.wrongAnswers + (isAnswerCorrect ? 0 : 1),
-      finalScore: isAnswerCorrect ? score + pointsPerQuestion : score
+      finalScore: isAnswerCorrect ? score + pointsPerQuestion : score,
     };
 
     setResults(newResults);
 
     if (isAnswerCorrect) {
-      setScore(prev => prev + pointsPerQuestion);
+      setScore((prev) => prev + pointsPerQuestion);
       setTimeout(() => {
         setShowFeedback(false);
         if (currentExerciseIndex + 1 < totalExercises) {
-          setCurrentExerciseIndex(prev => prev + 1);
+          setCurrentExerciseIndex((prev) => prev + 1);
         } else {
-          setResults(prev => ({
+          setResults((prev) => ({
             ...prev,
-            finalScore: score + pointsPerQuestion
+            finalScore: score + pointsPerQuestion,
           }));
           setShowFinalResults(true);
         }
@@ -120,14 +119,14 @@ export default function GapFill() {
   const handleGotIt = () => {
     setShowIncorrectFeedback(false);
     setShowFeedback(false);
-    setUserAnswers(new Array(currentExercise.word.length).fill(''));
-    
+    setUserAnswers(new Array(currentExercise.word.length).fill(""));
+
     if (currentExerciseIndex + 1 < totalExercises) {
-      setCurrentExerciseIndex(prev => prev + 1);
+      setCurrentExerciseIndex((prev) => prev + 1);
     } else {
-      setResults(prev => ({
+      setResults((prev) => ({
         ...prev,
-        finalScore: score
+        finalScore: score,
       }));
       setShowFinalResults(true);
     }
@@ -135,7 +134,7 @@ export default function GapFill() {
 
   const renderWord = () => {
     const word = currentExercise.word;
-    return word.split('').map((letter, index) => {
+    return word.split("").map((letter, index) => {
       if (currentExercise.blanks.includes(index)) {
         return (
           <input
@@ -143,7 +142,7 @@ export default function GapFill() {
             ref={inputRefs.current[currentExercise.blanks.indexOf(index)]}
             type="text"
             maxLength={1}
-            value={userAnswers[index] || ''}
+            value={userAnswers[index] || ""}
             onChange={(e) => handleInputChange(index, e.target.value)}
             className="w-8 h-8 text-center border-b-2 border-blue-500 mx-1 focus:outline-none focus:border-blue-700"
           />
@@ -185,6 +184,11 @@ export default function GapFill() {
     );
   }
 
+  const hasAnswers = userAnswers.some(
+    (answer, index) =>
+      currentExercise.blanks.includes(index) && answer.trim() !== ""
+  );
+
   return (
     <div className="relative bg-white pt-5">
       <div className="relative max-w-[1400px] mx-auto">
@@ -199,24 +203,26 @@ export default function GapFill() {
                   score={score}
                 />
               </div>
-              
+
               <div className="flex flex-col sm:flex-row justify-between items-start m-5 sm:mt-20">
                 <div className="flex flex-col flex-1">
                   <h1 className="text-xl sm:text-2xl font-bold text-green-600 mb-4">
                     {currentExercise.question}
                   </h1>
 
-                  <div className="flex items-center gap-4 mb-6">
-                  <button
+                  <div className="flex items-center  gap-4 mb-6">
+                    <button
                       onClick={playAudio}
                       disabled={isPlaying}
                       className={`p-3 rounded-full ${
-                        isPlaying ? 'bg-blue-100' : 'bg-blue-50'
+                        isPlaying ? "bg-blue-100" : "bg-blue-50"
                       } hover:bg-blue-100 transition-colors`}
                     >
-                      <Volume2 className={`w-6 h-6 ${
-                        isPlaying ? 'text-blue-600' : 'text-blue-500'
-                      }`} />
+                      <Volume2
+                        className={`w-6 h-6 ${
+                          isPlaying ? "text-blue-600" : "text-blue-500"
+                        }`}
+                      />
                     </button>
 
                     <img
@@ -224,24 +230,37 @@ export default function GapFill() {
                       alt={currentExercise.word}
                       className="w-32 h-32 object-contain"
                     />
-                    
                   </div>
 
                   <form onSubmit={handleSubmit} className="space-y-6 ">
                     <div className="text-2xl flex items-center justify-center">
                       {renderWord()}
                     </div>
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white  px-8 py-3 rounded-lg
-                        disabled:bg-gray-300 disabled:cursor-not-allowed
-                        hover:bg-blue-600 transition-colors "
-                    >
-                      Submit
-                    </button>
+
+                    <div className="flex  justify-center mt-8">
+                      <button
+                        onClick={checkAnswer}
+                        disabled={!hasAnswers}
+                        className="
+    bg-gradient-to-r from-blue-500 to-blue-600
+    hover:from-blue-600 hover:to-blue-700
+    disabled:from-gray-400 disabled:to-gray-500
+    text-white font-semibold sm:py-4 py-2 px-10
+    rounded-xl text-lg
+    transform transition-all duration-200
+    hover:-translate-y-1 hover:shadow-lg
+    disabled:hover:translate-y-0
+    disabled:hover:shadow-none
+    disabled:cursor-not-allowed
+    sm:w-auto mt-8
+  "
+                      >
+                        Check Answers
+                      </button>
+                    </div>
                   </form>
                 </div>
-                
+
                 <div className="hidden sm:block ml-8">
                   <Stats
                     questionNumber={currentExerciseIndex + 1}
@@ -258,21 +277,20 @@ export default function GapFill() {
                 questionNumber={currentExerciseIndex + 1}
               />
 
-<IncorrectGapFill
-  isVisible={showIncorrectFeedback}
-  currentExercise={{
-    answer: currentExercise.word,
-    explanation: currentExercise.explanation,
-    sentence: currentExercise.sentence,
-    solve: currentExercise.solve,
-    wordFamily: currentExercise.wordFamily,
-    image: currentExercise.image,
-    blanks: currentExercise.blanks
-  }}
-  userAnswer={userAnswers.join('')}
-  onGotIt={handleGotIt}
-/>
-
+              <IncorrectGapFill
+                isVisible={showIncorrectFeedback}
+                currentExercise={{
+                  answer: currentExercise.word,
+                  explanation: currentExercise.explanation,
+                  sentence: currentExercise.sentence,
+                  solve: currentExercise.solve,
+                  wordFamily: currentExercise.wordFamily,
+                  image: currentExercise.image,
+                  blanks: currentExercise.blanks,
+                }}
+                userAnswer={userAnswers.join("")}
+                onGotIt={handleGotIt}
+              />
             </div>
           </div>
         </div>

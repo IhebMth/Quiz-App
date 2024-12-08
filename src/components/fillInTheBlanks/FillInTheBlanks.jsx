@@ -1,13 +1,13 @@
-import { useState, useEffect } from 'react';
-import Stats from '../Stats';
-import Feedback from '../FeedBack';
-import FinalResults from '../FinalResults';
-import IncorrectFeedback from './IncorrectFillFeedback';
-import exercisesData from './fillInTheBlanksExercises.json';
+import { useState, useEffect } from "react";
+import Stats from "../Stats";
+import Feedback from "../FeedBack";
+import FinalResults from "../FinalResults";
+import IncorrectFeedback from "./IncorrectFillFeedback";
+import exercisesData from "./fillInTheBlanksExercises.json";
 
 export default function WordCompletion() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
-  const [userAnswer, setUserAnswer] = useState('');
+  const [userAnswer, setUserAnswer] = useState("");
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [score, setScore] = useState(0);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -30,7 +30,7 @@ export default function WordCompletion() {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
-        setTimeElapsed(prev => prev + 1);
+        setTimeElapsed((prev) => prev + 1);
       }
     }, 1000);
     return () => clearInterval(timer);
@@ -38,38 +38,40 @@ export default function WordCompletion() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const isAnswerCorrect = userAnswer.toLowerCase().trim() === currentExercise.answer.toLowerCase().trim();
+    const isAnswerCorrect =
+      userAnswer.toLowerCase().trim() ===
+      currentExercise.answer.toLowerCase().trim();
     setIsCorrect(isAnswerCorrect);
     setShowFeedback(true);
 
     const newResults = {
-        ...results,
-        questions: [
-          ...results.questions,
-          {
-            isCorrect: isAnswerCorrect,
-            userAnswer: userAnswer,
-          }
-        ],
-        times: [...results.times, timeElapsed],
-        correctAnswers: results.correctAnswers + (isAnswerCorrect ? 1 : 0),
-        wrongAnswers: results.wrongAnswers + (isAnswerCorrect ? 0 : 1),
-        finalScore: isAnswerCorrect ? score + pointsPerQuestion : score
-      };
+      ...results,
+      questions: [
+        ...results.questions,
+        {
+          isCorrect: isAnswerCorrect,
+          userAnswer: userAnswer,
+        },
+      ],
+      times: [...results.times, timeElapsed],
+      correctAnswers: results.correctAnswers + (isAnswerCorrect ? 1 : 0),
+      wrongAnswers: results.wrongAnswers + (isAnswerCorrect ? 0 : 1),
+      finalScore: isAnswerCorrect ? score + pointsPerQuestion : score,
+    };
 
     setResults(newResults);
 
     if (isAnswerCorrect) {
-      setScore(prev => prev + pointsPerQuestion);
+      setScore((prev) => prev + pointsPerQuestion);
       setTimeout(() => {
         setShowFeedback(false);
-        setUserAnswer('');
+        setUserAnswer("");
         if (currentExerciseIndex + 1 < totalExercises) {
-          setCurrentExerciseIndex(prev => prev + 1);
+          setCurrentExerciseIndex((prev) => prev + 1);
         } else {
-          setResults(prev => ({
+          setResults((prev) => ({
             ...prev,
-            finalScore: score + pointsPerQuestion
+            finalScore: score + pointsPerQuestion,
           }));
           setShowFinalResults(true);
         }
@@ -82,34 +84,42 @@ export default function WordCompletion() {
   const handleGotIt = () => {
     setShowIncorrectFeedback(false);
     setShowFeedback(false);
-    setUserAnswer('');
-    
+    setUserAnswer("");
+
     if (currentExerciseIndex + 1 < totalExercises) {
-      setCurrentExerciseIndex(prev => prev + 1);
+      setCurrentExerciseIndex((prev) => prev + 1);
     } else {
-      setResults(prev => ({
+      setResults((prev) => ({
         ...prev,
-        finalScore: score
+        finalScore: score,
       }));
       setShowFinalResults(true);
     }
   };
 
   const renderWordCompletion = () => {
-    const parts = currentExercise.sentence.split('{answer}');
+    const parts = currentExercise.sentence.split("{answer}");
     const [before, after] = parts;
     const given = currentExercise.given;
 
     return (
       <div className="flex items-center gap-2 flex-wrap">
-        <span dangerouslySetInnerHTML={{ __html: before.replace('{given}', `<strong>${given}</strong>`) }} />
+        <span
+          dangerouslySetInnerHTML={{
+            __html: before.replace("{given}", `<strong>${given}</strong>`),
+          }}
+        />
         <input
           type="text"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
           className="border-b-2 border-blue-500 focus:outline-none focus:border-blue-700 px-2 py-1 w-32"
         />
-        <span dangerouslySetInnerHTML={{ __html: after.replace('{given}', `<strong>${given}</strong>`) }} />
+        <span
+          dangerouslySetInnerHTML={{
+            __html: after.replace("{given}", `<strong>${given}</strong>`),
+          }}
+        />
       </div>
     );
   };
@@ -134,9 +144,9 @@ export default function WordCompletion() {
   };
 
   const renderPossessiveWithHint = () => {
-    const parts = currentExercise.sentence.split('{answer}');
+    const parts = currentExercise.sentence.split("{answer}");
     const [before, after] = parts;
-  
+
     return (
       <div className="space-y-4">
         <div className="space-y-2">
@@ -144,7 +154,14 @@ export default function WordCompletion() {
             <span className="font-medium">{currentExercise.hintWord}</span>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span dangerouslySetInnerHTML={{ __html: before.replace('{given}', `<strong>${currentExercise.given}</strong>`) }} />
+            <span
+              dangerouslySetInnerHTML={{
+                __html: before.replace(
+                  "{given}",
+                  `<strong>${currentExercise.given}</strong>`
+                ),
+              }}
+            />
             <div className="relative">
               <input
                 type="text"
@@ -162,11 +179,11 @@ export default function WordCompletion() {
 
   const renderExercise = () => {
     switch (currentExercise.type) {
-      case 'word_completion':
+      case "word_completion":
         return renderWordCompletion();
-      case 'simple_addition':
+      case "simple_addition":
         return renderSimpleAddition();
-      case 'possessive_hint':
+      case "possessive_hint":
         return renderPossessiveWithHint();
       default:
         return renderWordCompletion();
@@ -180,7 +197,7 @@ export default function WordCompletion() {
         exercises={exercises.map((exercise) => ({
           sentence: exercise.sentence,
           given: exercise.given,
-          suffix: exercise.suffix || '', // Default to empty string if not provided
+          suffix: exercise.suffix || "", // Default to empty string if not provided
           answer: exercise.answer, // Pass the correct answer
           explanation: exercise.explanation, // Optional, if explanations are used
         }))}
@@ -197,13 +214,11 @@ export default function WordCompletion() {
             wrongAnswers: 0,
             finalScore: 0,
           });
-          setUserAnswer('');
+          setUserAnswer("");
         }}
       />
     );
   }
-  
-  
 
   return (
     <div className=" relative  pt-5">
@@ -219,7 +234,7 @@ export default function WordCompletion() {
                   score={score}
                 />
               </div>
-              
+
               <div className="flex flex-col sm:flex-row justify-between items-start m-5 sm:mt-20">
                 <div className="flex flex-col flex-1">
                   <h1 className="text-xl sm:text-2xl font-bold text-green-600 mb-4">
@@ -227,17 +242,30 @@ export default function WordCompletion() {
                   </h1>
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="text-lg">{renderExercise()}</div>
-                    <button
-                      type="submit"
-                      className="bg-blue-500 text-white px-8 py-3 rounded-lg
-                        disabled:bg-gray-300 disabled:cursor-not-allowed
-                        hover:bg-blue-600 transition-colors"
-                    >
-                      Submit
-                    </button>
+                    <div className="flex justify-center mt-8">
+                      <button
+                        type="submit"
+                        disabled={!userAnswer.trim()}
+                        className="
+    bg-gradient-to-r from-blue-500 to-blue-600
+    hover:from-blue-600 hover:to-blue-700
+    disabled:from-gray-400 disabled:to-gray-500
+    text-white font-semibold sm:py-4 py-2 px-10
+    rounded-xl text-lg
+    transform transition-all duration-200
+    hover:-translate-y-1 hover:shadow-lg
+    disabled:hover:translate-y-0
+    disabled:hover:shadow-none
+    disabled:cursor-not-allowed
+    sm:w-auto
+  "
+                      >
+                        Check Answers
+                      </button>
+                    </div>
                   </form>
                 </div>
-                
+
                 <div className="hidden sm:block ml-8">
                   <Stats
                     questionNumber={currentExerciseIndex + 1}
