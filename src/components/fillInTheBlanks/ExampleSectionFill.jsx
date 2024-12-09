@@ -105,14 +105,13 @@ const ExampleSectionFill = ({ children, data }) => {
     <div ref={sectionRef} className="w-full max-w-5xl mx-auto">
       <button
         onClick={toggleMode}
-        className="flex items-center w-auto px-4 py-2 mx-auto  mb-8 lg:-mb-10 md:-mb-10 text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
-        style={{ justifyContent: "space-between" }}
+        className="flex items-center w-auto px-4 py-2 mx-auto  text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
       >
-        {mode === "practice" ? "Learn with an example" : "Back to practice"}
+        {mode === "practice" ? "Learn with examples" : "Back to practice"}
         {mode === "practice" ? (
-          <ChevronDown className="w-5 h-5" />
+          <ChevronDown className="w-5 h-5 ml-2" />
         ) : (
-          <ChevronUp className="w-5 h-5" />
+          <ChevronUp className="w-5 h-5 ml-2" />
         )}
       </button>
 

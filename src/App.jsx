@@ -4,7 +4,7 @@ import Navbar from './components/NavBar';
 import DragAndDropWithExample from './components/dragAndDrop/DragAndDropWithAnExample';
 import FillInTheBlanksWithExample from './components/fillInTheBlanks/FillInTheBlanksWithAnExample';
 import GapFillWithExample from './components/gapFill/GapFillWithAnExample';
-import Highlight from './components/highlight/Highlight';
+import HighlightWithExample from './components/highlight/HighLightWithAnExample';
 
 const App = () => {
   return (
@@ -15,7 +15,7 @@ const App = () => {
             <Route path="/drag-and-drop" element={<DragAndDropWithExample />} />
             <Route path="/fill-in-the-blanks" element={<FillInTheBlanksWithExample />} />
             <Route path="/gap-fill" element={<GapFillWithExample />} />
-            <Route path="/highlight" element={<Highlight />} />
+            <Route path="/highlight" element={<HighlightWithExample />} />
 
           </Routes>
       </div>

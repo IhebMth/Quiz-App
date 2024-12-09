@@ -1,22 +1,21 @@
 {
     "exercises": [
-        {
-            "id": 4,
-            "type": "pronouns",
-            "text": "Competitive swimmers must wear goggles to protect your eyes from chlorination in the water and to improve underwater visibility",
-            "targets": [{"word": "your", "correction": "their"}],
-            "question": "Find the incorrect pronoun and type the correct one",
-            "explanation": "The pronoun 'your' should be 'their' to maintain consistency with 'swimmers'"
-          },
-        {
-            "id": 5,
-            "type": "redundant-phrase",
-            "text": "Pesto, a sauce that originated in northern Italy, is traditionally prepared with basil, garlic, pine nuts, Parmesan cheese and olive oil, but some people also add lemon juice in addition.",
-            "targets": ["originated", "in", "addition"],
-            "question": "Select the word or phrase that is redundant and can be removed without changing the meaning of the text.",
-            "explanation": "The phrase 'in addition' is redundant since 'also' is already used to indicate addition."
-          },
-           
+      {
+        "id": 4,
+        "type": "pronouns",
+        "text": "Competitive swimmers must wear goggles to protect your eyes from chlorination in the water and to improve underwater visibility",
+        "targets": [{"word": "your", "correction": "their"}],
+        "question": "Find the incorrect pronoun and type the correct one",
+        "explanation": "The pronoun 'your' should be 'their' to maintain consistency with 'swimmers'"
+      },
+      {
+        "id": 5,
+        "type": "redundant-phrase",
+        "text": "Pesto, a sauce that originated in northern Italy, is traditionally prepared with basil, garlic, pine nuts, Parmesan cheese and olive oil, but some people also add lemon juice in addition.",
+        "targets": ["originated", "in", "addition"],
+        "question": "Select the word or phrase that is redundant and can be removed without changing the meaning of the text.",
+        "explanation": "The phrase 'in addition' is redundant since 'also' is already used to indicate addition."
+      },
       {
         "id": 1,
         "type": "vowels",
@@ -41,5 +40,47 @@
         "question": "Highlight the redundant words in this sentence",
         "explanation": "Remove 'personally' or 'personal' to avoid redundancy"
       }
-    ]
+    ],
+    "examples": {
+      "pronouns": {
+        "id": "ex1",
+        "type": "pronouns",
+        "text": "The students finished their homework, but he forgot to submit it to their teacher",
+        "targets": [{"word": "their", "correction": "his"}],
+        "question": "Example: Identifying Incorrect Pronouns",
+        "explanation": "Since we're referring to 'he' (singular), we should use 'his' instead of 'their' in the second instance"
+      },
+      "redundant-phrase": {
+        "id": "ex2",
+        "type": "redundant-phrase",
+        "text": "Due to the fact that it was raining outside, we decided to postpone the outdoor event until a later time",
+        "targets": ["Due to the fact that", "outside", "until a later time"],
+        "question": "Example: Identifying Redundant Phrases",
+        "explanation": "Phrases like 'Due to the fact that' can be replaced with 'Because', 'outside' is redundant with 'raining', and 'until a later time' can be simplified to 'postpone'"
+      },
+      "vowels": {
+        "id": "ex3",
+        "type": "vowels",
+        "text": "beautiful",
+        "targets": ["e", "a", "u", "i", "u"],
+        "question": "Example: Finding Vowels",
+        "explanation": "The vowels in 'beautiful' are 'e', 'a', 'u', 'i', 'u'"
+      },
+      "nouns": {
+        "id": "ex4",
+        "type": "nouns",
+        "text": "The teacher wrote a lesson on the blackboard",
+        "targets": ["teacher", "lesson", "blackboard"],
+        "question": "Example: Identifying Nouns",
+        "explanation": "The nouns in this sentence are 'teacher', 'lesson', and 'blackboard'"
+      },
+      "redundant": {
+        "id": "ex5",
+        "type": "redundant",
+        "text": "Please RSVP back to confirm your attendance at the event celebration",
+        "targets": ["back", "celebration"],
+        "question": "Example: Identifying Redundant Words",
+        "explanation": "RSVP already means to respond, so 'back' is redundant. Similarly, 'event' and 'celebration' are redundant together"
+      }
+    }
   }

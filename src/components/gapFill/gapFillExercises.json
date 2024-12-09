@@ -46,7 +46,7 @@
             "word": "stop",
             "blanks": [0, 1],
             "explanation": "The 'st' blend creates a combined sound at the start",
-            "image": "/api/placeholder/150/150",
+            "image": "/images/stop.png",
             "pattern": "Initial consonant blend 'st'",
             "soundClue": "Sounds like /st/",
             "commonWords": ["stay", "step", "stick"]
@@ -55,7 +55,7 @@
             "word": "jump",
             "blanks": [2, 3],
             "explanation": "The 'mp' blend creates a combined sound at the end",
-            "image": "/api/placeholder/150/150",
+            "image": "/images/jump.png",
             "pattern": "Final consonant blend 'mp'",
             "soundClue": "Sounds like /mp/",
             "commonWords": ["bump", "lamp", "camp"]
@@ -70,7 +70,7 @@
             "word": "cat",
             "blanks": [1],
             "explanation": "Short 'a' sound in the middle",
-            "image": "/api/placeholder/150/150",
+            "image": "/images/cat.png",
             "pattern": "CVC pattern with short 'a'",
             "soundClue": "Sounds like /æ/",
             "commonWords": ["hat", "bat", "rat"]
