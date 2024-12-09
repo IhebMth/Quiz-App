@@ -4,7 +4,7 @@ import Navbar from './components/NavBar';
 import DragAndDropWithExample from './components/dragAndDrop/DragAndDropWithAnExample';
 import FillInTheBlanksWithExample from './components/fillInTheBlanks/FillInTheBlanksWithAnExample';
 import GapFillWithExample from './components/gapFill/GapFillWithAnExample';
-import HighlightWithExample from './components/highlight/HighLightWithAnExample';
+import HighlightWithExample from './components/highlight/HighlightWithAnExample';
 
 const App = () => {
   return (
