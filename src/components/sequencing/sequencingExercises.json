@@ -1,0 +1,123 @@
+{
+    "exercises": [
+      {
+        "id": 1,
+        "type": "phrases",
+        "question": "Arrange these phrases in the correct order to make a story",
+        "contentType": "text",
+        "correctOrder": [
+          "Once upon a time",
+          "there was a little girl",
+          "who loved to read books",
+          "in her garden",
+          "every sunny afternoon"
+        ],
+        "options": [
+          { "id": "1", "content": "who loved to read books", "order": 3 },
+          { "id": "2", "content": "there was a little girl", "order": 2 },
+          { "id": "3", "content": "Once upon a time", "order": 1 },
+          { "id": "4", "content": "in her garden", "order": 4 },
+          { "id": "5", "content": "every sunny afternoon", "order": 5 }
+        ],
+        "solution": "The correct order forms a simple story: 'Once upon a time there was a little girl who loved to read books in her garden every sunny afternoon.'"
+      },
+      {
+        "id": 2,
+        "type": "sentence",
+        "question": "Unscramble the words to make a complete sentence",
+        "contentType": "text",
+        "correctOrder": ["The", "cat", "sits", "on", "the", "mat"],
+        "options": [
+          { "id": "1", "content": "mat", "order": 6 },
+          { "id": "2", "content": "sits", "order": 3 },
+          { "id": "3", "content": "cat", "order": 2 },
+          { "id": "4", "content": "the", "order": 5 },
+          { "id": "5", "content": "The", "order": 1 },
+          { "id": "6", "content": "on", "order": 4 }
+        ],
+        "solution": "The correct sentence is 'The cat sits on the mat', where each word is placed in its proper position to form a grammatically correct statement."
+      },
+      {
+        "id": 3,
+        "type": "image-word",
+        "question": "Put the letters in order to spell what's in the image",
+        "contentType": "mixed",
+        "image": "/images/dog.png",
+        "correctOrder": ["d", "o", "g"],
+        "options": [
+          { "id": "1", "content": "g", "order": 3 },
+          { "id": "2", "content": "o", "order": 2 },
+          { "id": "3", "content": "d", "order": 1 }
+        ],
+        "solution": "The image shows a dog, and the letters should be arranged in the order 'd', 'o', 'g' to spell the word correctly."
+      }
+    ],
+    "sections": [
+      {
+        "title": "Story Sequencing",
+        "description": "Learn how to arrange phrases to create coherent narratives. Focus on temporal order and logical flow.",
+        "examples": [
+          {
+            "type": "phrases",
+            "correctSequence": [
+              "Early in the morning",
+              "Sarah packed her lunch",
+              "drove to work",
+              "started her daily tasks",
+              "returned home at sunset"
+            ],
+            "explanation": "Notice how the sequence follows a chronological order, starting with the morning and ending with sunset.",
+            "pattern": "Time-based sequence: morning → afternoon → evening",
+            "tip": "Look for time indicators and natural progression of events",
+            "commonExamples": [
+              "Daily routines",
+              "Travel stories",
+              "Cooking recipes"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Sentence Structure",
+        "description": "Practice arranging words to form grammatically correct sentences. Understanding basic sentence patterns.",
+        "examples": [
+          {
+            "type": "sentence",
+            "correctSequence": [
+              "The",
+              "hungry",
+              "cat",
+              "ate",
+              "its",
+              "food"
+            ],
+            "explanation": "Basic English sentences follow Subject + Verb + Object structure.",
+            "pattern": "Article + Adjective + Noun + Verb + Possessive + Noun",
+            "tip": "Identify the main verb and build around it",
+            "commonExamples": [
+              "Subject-verb-object sentences",
+              "Descriptive statements",
+              "Action phrases"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Word Building",
+        "description": "Learn to arrange letters to form words, with focus on common spelling patterns.",
+        "examples": [
+          {
+            "type": "image-word",
+            "image": "/images/cat.png",
+            "correctSequence": ["c", "a", "t"],
+            "explanation": "Simple three-letter words often follow a consonant-vowel-consonant pattern.",
+            "pattern": "CVC (Consonant-Vowel-Consonant) pattern",
+            "tip": "Look at the image and sound out the word",
+            "commonExamples": [
+              "dog", "cat", "hat", "map"
+            ]
+          }
+        ]
+      }
+    ]
+  }

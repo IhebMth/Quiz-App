@@ -5,7 +5,10 @@ import DragAndDropWithExample from './components/dragAndDrop/DragAndDropWithAnEx
 import FillInTheBlanksWithExample from './components/fillInTheBlanks/FillInTheBlanksWithAnExample';
 import GapFillWithExample from './components/gapFill/GapFillWithAnExample';
 import HighlightWithExample from './components/highlight/HighlightWithAnExample';
-
+import ClickToChangeWithExample from './components/clickToChange/ClickToChangeWithAnExample';
+import SingleAnswerWithExample from './components/singleAnswer/SingleAnswerWithAnExample';
+import MultipleAnswerWithExample from './components/multipleAnswers/MultipleAnswersWithAnExample';
+import SequencingWithExample from './components/sequencing/SequincingWithAnExample';
 const App = () => {
   return (
     <Router>
@@ -16,6 +19,10 @@ const App = () => {
             <Route path="/fill-in-the-blanks" element={<FillInTheBlanksWithExample />} />
             <Route path="/gap-fill" element={<GapFillWithExample />} />
             <Route path="/highlight" element={<HighlightWithExample />} />
+            <Route path="/click-to-change" element={<ClickToChangeWithExample />} />
+            <Route path="/single-answer" element={<SingleAnswerWithExample />} />
+            <Route path="/multiple-answers" element={<MultipleAnswerWithExample />} />
+            <Route path="/sequencing" element={<SequencingWithExample />} />
 
           </Routes>
       </div>

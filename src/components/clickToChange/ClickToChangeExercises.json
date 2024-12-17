@@ -1,0 +1,85 @@
+{
+  "exercises": [
+    {
+      "id": 1,
+      "type": "capitalize",
+      "question": "Click to capitalize the days of the week",
+      "words": [
+        { "text": "monday", "shouldCapitalize": true },
+        { "text": "is", "shouldCapitalize": false },
+        { "text": "the", "shouldCapitalize": false },
+        { "text": "first", "shouldCapitalize": false },
+        { "text": "day", "shouldCapitalize": false },
+        { "text": "after", "shouldCapitalize": false },
+        { "text": "sunday", "shouldCapitalize": true }
+      ],
+      "explanation": "Days of the week should always be capitalized."
+    },
+    {
+      "id": 2,
+      "type": "capitalize",
+      "question": "Click to capitalize the months and proper nouns",
+      "words": [
+        { "text": "in", "shouldCapitalize": false },
+        { "text": "december", "shouldCapitalize": true },
+        { "text": "sarah", "shouldCapitalize": true },
+        { "text": "visited", "shouldCapitalize": false },
+        { "text": "paris", "shouldCapitalize": true }
+      ],
+      "explanation": "Months and proper nouns should always be capitalized."
+    },
+    {
+      "id": 3,
+      "type": "pronoun",
+      "question": "Click to correct the pronouns in the sentence",
+      "words": [
+        { "text": "me", "correctForm": "I", "isPronoun": true },
+        { "text": "and", "isPronoun": false },
+        { "text": "him", "correctForm": "he", "isPronoun": true },
+        { "text": "went", "isPronoun": false },
+        { "text": "to", "isPronoun": false },
+        { "text": "the", "isPronoun": false },
+        { "text": "store", "isPronoun": false }
+      ],
+      "explanation": "Use subject pronouns (I, he, she, we, they) when they are the subject of the sentence."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Capitalization Rules",
+      "description": "Learn when to capitalize words in English",
+      "examples": [
+        {
+          "sentence": "john lives in new york with mary.",
+          "answer": "John lives in New York with Mary.",
+          "given": "Proper nouns",
+          "explanation": "Always capitalize names of people and places"
+        },
+        {
+          "sentence": "she was born in {given}, but moved to france in {answer}.",
+          "answer": "October",
+          "given": "october",
+          "explanation": "Months of the year should always be capitalized"
+        }
+      ]
+    },
+    {
+      "title": "Pronoun Usage",
+      "description": "Learn how to use pronouns correctly in sentences",
+      "examples": [
+        {
+          "sentence": "{given} and {answer} went to the park.",
+          "answer": "she",
+          "given": "her",
+          "explanation": "Use subject pronouns when they are the subject of the sentence"
+        },
+        {
+          "sentence": "The teacher asked {given} and {answer} to help.",
+          "answer": "me",
+          "given": "I",
+          "explanation": "Use object pronouns when they are the object of the sentence"
+        }
+      ]
+    }
+  ]
+}

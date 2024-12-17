@@ -1,0 +1,91 @@
+{
+  "syllableExercises": [
+    {
+      "id": 1,
+      "type": "syllable",
+      "word": "volcano",
+      "image": "/images/volcano.png",
+      "syllables": ["vol", "ca", "no"],
+      "correctAnswer": 3,
+      "options": [2, 3, 4],
+      "question": "Listen to the word 'volcano'. How many syllables do you hear?"
+    },
+    {
+      "id": 2,
+      "type": "syllable",
+      "word": "penguin",
+      "image": "/images/penguin.png",
+      "syllables": ["pen", "guin"],
+      "correctAnswer": 2,
+      "options": [1, 2, 3],
+      "question": "Count the syllables in the word 'penguin'."
+    }
+  ],
+  "rhymingExercises": [
+    {
+      "id": 1,
+      "type": "rhyme",
+      "targetWord": "hope",
+      "question": "Which word below rhymes with 'hope'?",
+      "options": [
+        {
+          "word": "rope",
+          "image": "/images/rope.png",
+          "isCorrect": true
+        },
+        {
+          "word": "cat",
+          "image": "/images/cat.png",
+          "isCorrect": false
+        },
+        {
+          "word": "ball",
+          "image": "/images/football.png",
+          "isCorrect": false
+        }
+      ]
+    }
+  ],
+  "sections": [
+    {
+      "title": "Syllable Counting",
+      "description": "Learn how to break words into syllables and count them correctly",
+      "examples": [
+        {
+          "word": "butterfly",
+          "syllables": ["but", "ter", "fly"],
+          "count": 3,
+          "audioGuide": "Listen carefully: but-ter-fly",
+          "tips": "Each syllable contains one vowel sound",
+          "explanation": "The word 'butterfly' has three distinct parts when spoken slowly: 'but', 'ter', and 'fly'"
+        },
+        {
+          "word": "elephant",
+          "syllables": ["e", "le", "phant"],
+          "count": 3,
+          "audioGuide": "Listen carefully: e-le-phant",
+          "tips": "Clap along with each syllable",
+          "explanation": "Break down 'elephant' into three parts: 'e', 'le', and 'phant'"
+        }
+      ]
+    },
+    {
+      "title": "Rhyming Words",
+      "description": "Learn to identify words that have the same ending sound",
+      "examples": [
+        {
+          "targetWord": "cat",
+          "rhymingWords": ["hat", "bat", "rat"],
+          "nonRhymingWord": "dog",
+          "explanation": "Words that rhyme with 'cat' end with the 'at' sound"
+        },
+        {
+          "targetWord": "moon",
+          "rhymingWords": ["soon", "tune", "spoon"],
+          "nonRhymingWord": "star",
+          "explanation": "Words that rhyme with 'moon' end with the 'oon' sound"
+        }
+      ]
+    }
+  ]
+}

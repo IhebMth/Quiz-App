@@ -263,12 +263,57 @@ export default function Highlight() {
     }
   };
 
+  const getFormattedAnswer = (selectedItems, exercise) => {
+    switch (exercise.type) {
+      case "vowels":
+        return Array.from(selectedItems)
+          .map(item => item.split("-")[0])
+          .join(", ");
+      case "pronouns":
+        return Object.entries(corrections)
+          .map(([ value]) => value)
+          .join(", ");
+      case "redundant":
+      case "nouns":
+        return Array.from(selectedItems).join(", ");
+      case "redundant-phrase":
+        return Array.from(selectedItems)
+          .map(item => item.split("-")[0])
+          .join(", ");
+      default:
+        return "";
+    }
+  };
+
+  const getFormattedCorrectAnswer = (exercise) => {
+    switch (exercise.type) {
+      case "vowels":
+        return exercise.targets.join(", ");
+      case "pronouns":
+        return exercise.targets
+          .map(target => target.correction)
+          .join(", ");
+      case "redundant":
+      case "nouns":
+      case "redundant-phrase":
+        return exercise.targets.join(", ");
+      default:
+        return "";
+    }
+  }
+
   const updateResults = (isCorrect, userAnswer, correctAnswer, newScore) => {
     setResults(prev => ({
       ...prev,
       questions: [
         ...prev.questions,
-        { isCorrect, userAnswer, correctAnswer }
+        {
+          isCorrect,
+          userAnswer: getFormattedAnswer(selectedItems, currentExercise),
+          correctAnswer: getFormattedCorrectAnswer(currentExercise),
+          question: currentExercise.question,
+          explanation: currentExercise.explanation
+        }
       ],
       times: [...prev.times, timeElapsed],
       correctAnswers: prev.correctAnswers + (isCorrect ? 1 : 0),
@@ -277,6 +322,8 @@ export default function Highlight() {
     }));
   };
 
+
+  
   const moveToNextQuestion = () => {
     setShowFeedback(false);
     setShowIncorrectFeedback(false);
@@ -431,12 +478,49 @@ export default function Highlight() {
   }
 
   return (
-    <div className="relative bg-white pt-5">
-      <div className="relative max-w-[1400px] mx-auto">
-        <div className="flex-1 w-full">
-          <div className="max-w-[1000px] mx-auto">
-            <div className="sm:min-h-[75vh] relative overflow-hidden">
-              <div className="block sm:hidden mb-6">
+    <div className="relative bg-white pt-3 sm:pt-5">
+    <div className="relative max-w-[1400px] mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
+      <div className="flex-1 w-full">
+        <div className="max-w-[1000px] mx-auto">
+          <div className="min-h-[75vh] relative overflow-hidden">
+            <div className="block sm:hidden mb-4 sm:mb-6">
+              <Stats
+                questionNumber={currentExerciseIndex + 1}
+                totalQuestions={totalExercises}
+                timeElapsed={timeElapsed}
+                score={score}
+              />
+            </div>
+
+            <div className="flex flex-col sm:flex-row justify-between items-start mt-2 sm:mt-4 md:mt-20">
+              <div className="flex flex-col flex-1 w-full">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-green-600 mb-3 sm:mb-4 px-2 sm:px-4 md:px-0">
+                  {currentExercise.question}
+                </h1>
+
+                <div className="text-base sm:text-lg md:text-2xl mb-6 sm:mb-8 p-3 sm:p-4 bg-gray-50 rounded-lg relative leading-relaxed">
+                  {renderText()}
+                </div>
+
+                <div className="flex justify-center mt-4 sm:mt-8 px-2 sm:px-0">
+                  <button
+                    onClick={checkAnswer}
+                    disabled={!hasSelection()}
+                    className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-blue-600
+                      hover:from-blue-600 hover:to-blue-700
+                      disabled:from-gray-400 disabled:to-gray-500
+                      text-white font-semibold py-2.5 sm:py-3 md:py-4 px-4 sm:px-6 md:px-10
+                      rounded-lg sm:rounded-xl text-sm sm:text-base md:text-lg
+                      transform transition-all duration-200
+                      hover:-translate-y-1 hover:shadow-lg
+                      active:translate-y-0"
+                  >
+                    Check Answers
+                  </button>
+                </div>
+              </div>
+
+              <div className="hidden sm:block ml-8">
                 <Stats
                   questionNumber={currentExerciseIndex + 1}
                   totalQuestions={totalExercises}
@@ -444,46 +528,7 @@ export default function Highlight() {
                   score={score}
                 />
               </div>
-
-              <div className="flex flex-col sm:flex-row justify-between items-start m-5 sm:mt-20">
-                <div className="flex flex-col flex-1">
-                  <h1 className="text-xl sm:text-2xl font-bold text-green-600 mb-4">
-                    {currentExercise.question}
-                  </h1>
-
-                  <div className="text-2xl mb-8 p-4 bg-gray-50 rounded-lg relative leading-relaxed">
-                    {renderText()}
-                  </div>
-
-                  <div className="flex justify-center mt-8">
-                    <button
-                      onClick={checkAnswer}
-                      disabled={!hasSelection()}
-                      className="
-                        bg-gradient-to-r from-blue-500 to-blue-600
-                        hover:from-blue-600 hover:to-blue-700
-                        disabled:from-gray-400 disabled:to-gray-500
-                        text-white font-semibold sm:py-4 py-2 px-10
-                        rounded-xl text-lg
-                        transform transition-all duration-200
-                        hover:-translate-y-1 hover:shadow-lg
-                        sm:w-auto
-                      "
-                    >
-                      Check Answers
-                    </button>
-                  </div>
-                </div>
-
-                <div className="hidden sm:block ml-8">
-                  <Stats
-                    questionNumber={currentExerciseIndex + 1}
-                    totalQuestions={totalExercises}
-                    timeElapsed={timeElapsed}
-                    score={score}
-                  />
-                </div>
-              </div>
+            </div>
 
               <Feedback
                 isVisible={showFeedback}

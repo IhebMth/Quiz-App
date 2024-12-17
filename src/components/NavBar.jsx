@@ -82,11 +82,38 @@ const Navbar = () => {
                 </li>
                 <li>
                   <Link
-                    to="/multiple-choice"
-                    className="block px-4 py-2 hover:bg-blue-100 rounded-b-lg transition duration-300"
+                    to="/click-to-change"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
                     onClick={handleDropdownClose}
                   >
-                    Multiple Choice
+                    Click To Change 
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/single-answer"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
+                    onClick={handleDropdownClose}
+                  >
+                    Single Answer
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/multiple-answers"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
+                    onClick={handleDropdownClose}
+                  >
+                    Multiple Answers
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/sequencing"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
+                    onClick={handleDropdownClose}
+                  >
+                    Sequencing
                   </Link>
                 </li>
               </ul>

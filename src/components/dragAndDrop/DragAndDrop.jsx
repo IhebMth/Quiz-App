@@ -51,7 +51,6 @@ const DragAndDrop = () => {
   const totalExercises = exercisesData.exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
 
-  // Reset state when exercise changes
   useEffect(() => {
     if (currentExercise) {
       const initialCategories = {};
@@ -64,7 +63,6 @@ const DragAndDrop = () => {
     }
   }, [currentExerciseIndex]);
 
-  // Timer effect
   useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
@@ -78,7 +76,6 @@ const DragAndDrop = () => {
     const { active, over } = event;
     const draggedItemId = active.id;
 
-    // Handle dropping outside any zone (return to initial state)
     if (!over) {
       let sourceCategory = null;
       Object.entries(categoryItems).forEach(([category, items]) => {
@@ -104,8 +101,6 @@ const DragAndDrop = () => {
     }
 
     const targetCategory = over.id;
-
-    // Check if item is already in a category
     let sourceCategory = null;
     Object.entries(categoryItems).forEach(([category, items]) => {
       if (items.some((item) => item.id === draggedItemId)) {
@@ -113,9 +108,8 @@ const DragAndDrop = () => {
       }
     });
 
-    // Handle moving from initial pool to category
     if (!sourceCategory) {
-      const draggedItem = currentExercise.options?.find(
+      const draggedItem = currentExercise.options.find(
         (item) => item.id === draggedItemId
       );
       if (draggedItem) {
@@ -125,9 +119,7 @@ const DragAndDrop = () => {
         }));
         setMovedItems((prev) => new Set(prev).add(draggedItemId));
       }
-    }
-    // Handle moving between categories
-    else if (sourceCategory !== targetCategory) {
+    } else if (sourceCategory !== targetCategory) {
       setCategoryItems((prev) => {
         const draggedItem = prev[sourceCategory].find(
           (item) => item.id === draggedItemId
@@ -150,7 +142,6 @@ const DragAndDrop = () => {
     );
   };
 
-  // Reset an individual item to initial state
   const handleResetItem = (itemId) => {
     let sourceCategory = null;
     Object.entries(categoryItems).forEach(([category, items]) => {
@@ -176,31 +167,56 @@ const DragAndDrop = () => {
 
   const checkAnswers = () => {
     let isAllCorrect = true;
+    const userAnswersByCategory = {};
+    const correctAnswersByCategory = {};
+  
+    // Initialize the answer objects with empty arrays for each category
+    currentExercise.categories.forEach(category => {
+      userAnswersByCategory[category] = [];
+      correctAnswersByCategory[category] = [];
+    });
+  
+    // Collect user answers based on where they actually placed items
     Object.entries(categoryItems).forEach(([category, items]) => {
-      items.forEach((item) => {
+      userAnswersByCategory[category] = items.map(item => item.content);
+    });
+  
+    // Collect correct answers
+    currentExercise.options.forEach(item => {
+      correctAnswersByCategory[item.category].push(item.content);
+    });
+  
+    // Check if answers are correct
+    Object.entries(categoryItems).forEach(([category, items]) => {
+      items.forEach(item => {
         if (item.category !== category) {
           isAllCorrect = false;
         }
       });
     });
-
+  
+    // Format the answers for FinalResults
+    // We want to preserve the category structure in the results
+    const formattedResult = {
+      question: currentExercise.question,
+      isCorrect: isAllCorrect,
+      userAnswer: userAnswersByCategory,
+      correctAnswer: correctAnswersByCategory,
+      categories: currentExercise.categories, // Pass categories to know the order
+      exerciseType: "dragAndDrop"
+    };
+  
     const newResults = {
       ...results,
-      questions: [
-        ...results.questions,
-        {
-          question: currentExercise.question,
-          isCorrect: isAllCorrect,
-        },
-      ],
+      questions: [...results.questions, formattedResult],
       times: [...results.times, timeElapsed],
       correctAnswers: results.correctAnswers + (isAllCorrect ? 1 : 0),
       wrongAnswers: results.wrongAnswers + (isAllCorrect ? 0 : 1),
     };
-
+  
     setResults(newResults);
     setIsCorrect(isAllCorrect);
-
+  
     if (isAllCorrect) {
       setShowCorrectFeedback(true);
       setScore((prev) => prev + pointsPerQuestion);
@@ -305,16 +321,22 @@ const DragAndDrop = () => {
                   sensoryExamples={sensoryExamples}
                 />
 
-                <div className="grid grid-cols-2 px-5 gap-4  sm:gap-6 mb-8 w-full  sm:px-10">
-                  {currentExercise.options.map((item) =>
-                    !placedItems.has(item.id) ? (
+                <div className="grid grid-cols-2 px-5 gap-4 sm:gap-6 mb-8 w-full sm:px-10">
+                  {currentExercise.options.map((item) => {
+                    const isPlaced = placedItems.has(item.id);
+                    return isPlaced ? (
                       <div
-                        key={item.id}
-                        className={`transform transition-all duration-300
-                          hover:-translate-y-1 
-                          ${movedItems.has(item.id) ? "scale-105" : ""}
-                          w-full
-                        `}
+                        key={`placed-${item.id}`}
+                        className="p-3 rounded-md text-center h-10 w-full max-w-64 mx-auto bg-gray-200 text-gray-400"
+                      >
+                        <span></span>
+                      </div>
+                    ) : (
+                      <div
+                        key={`unplaced-${item.id}`}
+                        className={`transform transition-all duration-300 hover:-translate-y-1 ${
+                          movedItems.has(item.id) ? "scale-105" : ""
+                        } w-full`}
                       >
                         <DraggableItem
                           id={item.id}
@@ -323,23 +345,12 @@ const DragAndDrop = () => {
                           label={item.label}
                         />
                       </div>
-                    ) : (
-                      <>
-                      <div
-                      key={item.id}
-                      className={`p-3 rounded-md text-center h-10 w-full max-w-64 mx-auto ${
-                        item.type === "text" || !item.type ? "bg-gray-200 text-gray-400" : ""
-                      }`}
-                    >
-                      <span></span>
-                      </div>
-                      </>
-                    )
-                  )}
+                    );
+                  })}
                 </div>
 
                 <div className="grid grid-cols-1 gap-2 sm:gap-8 w-full px-2">
-                  <div className="flex flex-row gap-3 sm:gap-8 w-full ">
+                  <div className="flex flex-row gap-3 sm:gap-8 w-full">
                     {currentExercise.categories.map((category) => (
                       <DroppableZone
                         key={category}

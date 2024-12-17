@@ -1,0 +1,103 @@
+{
+    "soundMatchingExercises": [
+      {
+        "id": 1,
+        "type": "sound_matching",
+        "question": "Listen to each word. Which two words end with the same sound?",
+        "options": [
+          {
+            "word": "deck",
+            "image": "/images/deck.png",
+            "isCorrect": true,
+            "endSound": "eck"
+          },
+          {
+            "word": "rock",
+            "image": "/images/rock.png",
+            "isCorrect": true,
+            "endSound": "eck"
+          },
+          {
+            "word": "box",
+            "image": "/images/box.png",
+            "isCorrect": false,
+            "endSound": "ox"
+          }
+        ],
+        "requiredSelections": 2
+      }
+    ],
+    "synonymExercises": [
+      {
+        "id": 1,
+        "type": "synonym",
+        "question": "Find the two synonyms below. Synonyms are words with the same meaning or almost the same meaning.",
+        "options": [
+          {
+            "word": "penny",
+            "isCorrect": true,
+            "audio": true
+          },
+          {
+            "word": "dollar",
+            "isCorrect": false,
+            "audio": true
+          },
+          {
+            "word": "cent",
+            "isCorrect": true,
+            "audio": true
+          }
+        ],
+        "requiredSelections": 2
+      }
+    ],
+    "sections": [
+      {
+        "title": "Sound Matching",
+        "description": "Practice identifying words that share the same sound patterns",
+        "examples": [
+          {
+            "title": "End Sound Match",
+            "words": ["back", "pack", "sack"],
+            "pattern": "Words ending in 'ack'",
+            "soundClue": "Listen for the /æk/ sound at the end",
+            "explanation": "These words all share the same ending sound pattern '-ack'",
+            "image": "/images/sound-match.png",
+            "commonExamples": ["track", "stack", "rack"]
+          },
+          {
+            "title": "Beginning Sound Match",
+            "words": ["ship", "shell", "shop"],
+            "pattern": "Words beginning with 'sh'",
+            "soundClue": "Listen for the /ʃ/ sound at the start",
+            "explanation": "These words all share the same beginning sound pattern 'sh-'",
+            "image": "/images/sh-sound.png",
+            "commonExamples": ["shade", "shine", "shake"]
+          }
+        ]
+      },
+      {
+        "title": "Synonyms",
+        "description": "Learn to identify words with similar meanings",
+        "examples": [
+          {
+            "title": "Basic Synonyms",
+            "words": ["big", "large", "huge"],
+            "pattern": "Words meaning 'of great size'",
+            "explanation": "These words can be used interchangeably to describe size",
+            "image": "/images/synonyms.png",
+            "commonExamples": ["enormous", "gigantic", "massive"]
+          },
+          {
+            "title": "Action Synonyms",
+            "words": ["jump", "leap", "hop"],
+            "pattern": "Words describing upward movement",
+            "explanation": "These words all describe similar actions of moving upward quickly",
+            "image": "/images/action-synonyms.png",
+            "commonExamples": ["bounce", "spring", "vault"]
+          }
+        ]
+      }
+    ]
+  }
