@@ -4,6 +4,7 @@ import {
   closestCenter,
   KeyboardSensor,
   PointerSensor,
+  TouchSensor,
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
@@ -39,15 +40,29 @@ export default function Sequence() {
     finalScore: 0,
   });
 
+  // Updated sensors configuration for better mobile handling
   const sensors = useSensors(
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 8,
+      },
+    }),
     useSensor(PointerSensor, {
       activationConstraint: {
-        distance: 0,
+        distance: 8,
         delay: 0,
-        tolerance: 5,
-      }
+        tolerance: 8,
+      },
     }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor, {
+      coordinateGetter: (event, args) => {
+        return {
+          x: 0,
+          y: args.context.rect.current.top + args.context.rect.current.height,
+        };
+      },
+    })
   );
 
   const currentExercise = exercisesData.exercises[currentExerciseIndex];
@@ -68,8 +83,18 @@ export default function Sequence() {
   }, [showFinalResults]);
 
   const handleDragStart = (event) => {
-    setActiveId(event.active.id);
+    const { active } = event;
+    setActiveId(active.id);
+    document.body.style.cursor = 'grabbing';
+    document.body.style.userSelect = 'none';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
     document.body.classList.add('dragging');
+
+    // Add touch action manipulation for better mobile handling
+    const dragElement = document.getElementById(active.id);
+    if (dragElement) {
+      dragElement.style.touchAction = 'none';
+    }
   };
 
   const handleDragEnd = (event) => {
@@ -84,11 +109,23 @@ export default function Sequence() {
     }
     
     setActiveId(null);
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    document.body.style.overflow = '';
     document.body.classList.remove('dragging');
+
+    // Reset touch action
+    const dragElement = document.getElementById(active.id);
+    if (dragElement) {
+      dragElement.style.touchAction = '';
+    }
   };
 
   const handleDragCancel = () => {
     setActiveId(null);
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    document.body.style.overflow = '';
     document.body.classList.remove('dragging');
   };
 
@@ -151,7 +188,7 @@ export default function Sequence() {
 
   const getContainerStyle = (type) => {
     if (type === 'phrases') {
-      return "flex flex-col flex-nowrap overflow-x-auto gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide";
+      return "flex flex-col flex-nowrap overflow-x-auto gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide touch-pan-y";
     }
     
     if (type === 'image-word') {
@@ -159,10 +196,10 @@ export default function Sequence() {
       const gridCols = itemCount <= 4 
         ? `grid-cols-${itemCount}` 
         : 'grid-cols-4 sm:grid-cols-6';
-      return `grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
+      return `grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72 touch-pan-y`;
     }
 
-    return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full";
+    return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full touch-pan-y";
   };
 
   if (showFinalResults) {
