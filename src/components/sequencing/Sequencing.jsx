@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import {
   DndContext,
   closestCenter,
-  KeyboardSensor,
-  PointerSensor,
+  MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
@@ -40,30 +39,21 @@ export default function Sequence() {
     finalScore: 0,
   });
 
-  // Updated sensors configuration for better mobile handling
-  const sensors = useSensors(
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 250,
-        tolerance: 8,
-      },
-    }),
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-        delay: 0,
-        tolerance: 8,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: (event, args) => {
-        return {
-          x: 0,
-          y: args.context.rect.current.top + args.context.rect.current.height,
-        };
-      },
-    })
-  );
+  // Updated sensors configuration for smoother dragging
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 0, // Start dragging immediately
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 0, // No delay for touch
+      tolerance: 0, // No tolerance needed
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const currentExercise = exercisesData.exercises[currentExerciseIndex];
   const totalExercises = exercisesData.exercises.length;
@@ -87,13 +77,14 @@ export default function Sequence() {
     setActiveId(active.id);
     document.body.style.cursor = 'grabbing';
     document.body.style.userSelect = 'none';
-    document.body.style.overflow = 'hidden'; // Prevent scrolling while dragging
+    document.body.style.overflow = 'hidden';
     document.body.classList.add('dragging');
 
-    // Add touch action manipulation for better mobile handling
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = 'none';
+      dragElement.style.webkitUserSelect = 'none';
+      dragElement.style.webkitTouchCallout = 'none';
     }
   };
 
@@ -114,10 +105,11 @@ export default function Sequence() {
     document.body.style.overflow = '';
     document.body.classList.remove('dragging');
 
-    // Reset touch action
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = '';
+      dragElement.style.webkitUserSelect = '';
+      dragElement.style.webkitTouchCallout = '';
     }
   };
 
@@ -188,7 +180,7 @@ export default function Sequence() {
 
   const getContainerStyle = (type) => {
     if (type === 'phrases') {
-      return "flex flex-col flex-nowrap overflow-x-auto gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide touch-pan-y";
+      return "flex flex-col flex-nowrap overflow-x-auto gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide";
     }
     
     if (type === 'image-word') {
@@ -196,10 +188,10 @@ export default function Sequence() {
       const gridCols = itemCount <= 4 
         ? `grid-cols-${itemCount}` 
         : 'grid-cols-4 sm:grid-cols-6';
-      return `grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72 touch-pan-y`;
+      return `grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
     }
 
-    return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full touch-pan-y";
+    return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full";
   };
 
   if (showFinalResults) {
