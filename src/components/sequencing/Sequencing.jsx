@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import {
   DndContext,
-  closestCenter,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
+  pointerWithin,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -39,17 +39,18 @@ export default function Sequence() {
     finalScore: 0,
   });
 
-  // Updated sensors configuration for smoother dragging
+  // Updated sensor configuration for smoother dragging
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
-      distance: 0, // Start dragging immediately
+      distance: 0,
+      tolerance: 5,
     },
   });
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 0, // No delay for touch
-      tolerance: 0, // No tolerance needed
+      delay: 0,
+      tolerance: 5,
     },
   });
 
@@ -75,22 +76,38 @@ export default function Sequence() {
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
-    document.body.style.cursor = 'grabbing';
-    document.body.style.userSelect = 'none';
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('dragging');
-
+    
+    // Apply styles to dragged element
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = 'none';
       dragElement.style.webkitUserSelect = 'none';
       dragElement.style.webkitTouchCallout = 'none';
+      dragElement.style.zIndex = '9999';
+    }
+    
+    // Apply global styles
+    document.body.style.cursor = 'grabbing';
+    document.body.style.userSelect = 'none';
+    document.body.style.overflow = 'hidden';
+    document.body.classList.add('dragging');
+  };
+
+  const handleDragOver = (event) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const activeIndex = items.findIndex((item) => item.id === active.id);
+    const overIndex = items.findIndex((item) => item.id === over.id);
+
+    if (activeIndex !== overIndex) {
+      setItems((items) => arrayMove(items, activeIndex, overIndex));
     }
   };
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
-    
+
     if (over && active.id !== over.id) {
       setItems((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -98,27 +115,42 @@ export default function Sequence() {
         return arrayMove(items, oldIndex, newIndex);
       });
     }
-    
-    setActiveId(null);
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-    document.body.style.overflow = '';
-    document.body.classList.remove('dragging');
 
+    // Clean up styles
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = '';
       dragElement.style.webkitUserSelect = '';
       dragElement.style.webkitTouchCallout = '';
+      dragElement.style.zIndex = '';
     }
-  };
 
-  const handleDragCancel = () => {
-    setActiveId(null);
     document.body.style.cursor = '';
     document.body.style.userSelect = '';
     document.body.style.overflow = '';
     document.body.classList.remove('dragging');
+    
+    setActiveId(null);
+  };
+
+  const handleDragCancel = () => {
+    // Clean up styles
+    if (activeId) {
+      const dragElement = document.getElementById(activeId);
+      if (dragElement) {
+        dragElement.style.touchAction = '';
+        dragElement.style.webkitUserSelect = '';
+        dragElement.style.webkitTouchCallout = '';
+        dragElement.style.zIndex = '';
+      }
+    }
+
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+    document.body.style.overflow = '';
+    document.body.classList.remove('dragging');
+    
+    setActiveId(null);
   };
 
   const handleGotIt = () => {
@@ -179,8 +211,10 @@ export default function Sequence() {
   };
 
   const getContainerStyle = (type) => {
+    const baseStyles = "touch-none relative";  // Added touch-none for better mobile handling
+    
     if (type === 'phrases') {
-      return "flex flex-col flex-nowrap overflow-x-auto gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide";
+      return `${baseStyles} flex flex-wrap gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide`;
     }
     
     if (type === 'image-word') {
@@ -188,10 +222,10 @@ export default function Sequence() {
       const gridCols = itemCount <= 4 
         ? `grid-cols-${itemCount}` 
         : 'grid-cols-4 sm:grid-cols-6';
-      return `grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
+      return `${baseStyles} grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
     }
 
-    return "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full";
+    return `${baseStyles} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full`;
   };
 
   if (showFinalResults) {
@@ -249,8 +283,9 @@ export default function Sequence() {
                   <div className="space-y-4 sm:space-y-6">
                     <DndContext
                       sensors={sensors}
-                      collisionDetection={closestCenter}
+                      collisionDetection={pointerWithin}
                       onDragStart={handleDragStart}
+                      onDragOver={handleDragOver}
                       onDragEnd={handleDragEnd}
                       onDragCancel={handleDragCancel}
                       modifiers={[restrictToWindowEdges]}
