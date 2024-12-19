@@ -159,7 +159,7 @@ export default function TableExercise() {
                         <table className="w-full border-collapse table-fixed">
                           <thead>
                             <tr>
-                              <th className="w-[50%] p-2 min-[375px]:p-3 sm:p-4 text-left bg-gradient-to-r from-[#33b5e5] to-[#2d9ed4] text-white rounded-tl-xl ">
+                              <th className="w-[50%] p-2 min-[375px]:p-3 sm:p-4 text-left bg-gradient-to-r from-[#35bef0] to-[#2d9ed4] text-white rounded-tl-xl ">
                                 <span className="block text-xs min-[375px]:text-sm sm:text-base text-center font-bold">Items</span>
                               </th>
                               <th 
