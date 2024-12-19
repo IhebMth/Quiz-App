@@ -301,9 +301,57 @@ const FinalResults = ({ results, exercises, onRestart, exerciseType }) => {
     );
   };
   
-  // Update the renderQuestionDetails function to include the new drag and drop case
-  const renderQuestionDetails = (exercise, result) => {
-    if (exerciseType === "sequencing") {
+  const renderTableDetails = (exercise, result) => {
+    return (
+      <div className="text-sm">
+        <div className="font-medium mb-2">{exercise.question}</div>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* User's Answers */}
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="font-bold text-gray-600 mb-2">Your Answers:</div>
+            <div className="space-y-2">
+              {exercise.rows.map((row, index) => (
+                <div key={`user-${index}`} className="flex flex-col gap-1">
+                  <div className="text-xs text-gray-500">{row.text}</div>
+                  <div className={result.userAnswer[index] === row.correctAnswer ? 
+                    "text-green-600 font-medium" : "text-red-600 font-medium"}>
+                    {exercise.columns.find(col => col.id === result.userAnswer[index])?.label || "No answer"}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Correct Answers */}
+          <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="font-bold text-gray-600 mb-2">Correct Answers:</div>
+            <div className="space-y-2">
+              {exercise.rows.map((row, index) => (
+                <div key={`correct-${index}`} className="flex flex-col gap-1">
+                  <div className="text-xs text-gray-500">{row.text}</div>
+                  <div className="text-green-600 font-medium">
+                    {exercise.columns.find(col => col.id === row.correctAnswer)?.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {!result.isCorrect && exercise.explanation && (
+          <div className="mt-3 text-xs text-gray-600 italic">
+            {exercise.explanation}
+          </div>
+        )}
+      </div>
+    );
+  };
+    const renderQuestionDetails = (exercise, result) => {
+    if (exerciseType === "table") {
+      return renderTableDetails(exercise, result);
+    }
+    else if (exerciseType === "sequencing") {
       return renderSequencingDetails(exercise, result);
     }
     else if (exerciseType === "gapFill") {
@@ -451,6 +499,18 @@ FinalResults.propTypes = {
       contentType: PropTypes.string,
       image: PropTypes.string,
       type: PropTypes.string,
+      rows: PropTypes.arrayOf(
+        PropTypes.shape({
+          text: PropTypes.string.isRequired,
+          correctAnswer: PropTypes.string.isRequired,
+        })
+      ),
+      columns: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          label: PropTypes.string.isRequired,
+        })
+      ),
       correctOrder: PropTypes.arrayOf(PropTypes.string),
       solution: PropTypes.string,
     })

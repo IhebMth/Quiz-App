@@ -1,0 +1,198 @@
+{
+  "exercises": [
+    {
+      "id": 1,
+      "title": "Identifying Healthy Eating Habits",
+      "question": "Read each statement and classify it into the correct category.",
+      "rows": [
+        {
+          "text": "Eating five servings of fruits and vegetables daily.",
+          "correctAnswer": "balanced_diet"
+        },
+        {
+          "text": "Avoiding sugary drinks and opting for water instead.",
+          "correctAnswer": "hydration"
+        },
+        {
+          "text": "Cooking meals at home instead of eating processed foods.",
+          "correctAnswer": "healthy_cooking"
+        }
+      ],
+      "columns": [
+        {
+          "id": "balanced_diet",
+          "label": "Balanced Diet"
+        },
+        {
+          "id": "hydration",
+          "label": "Hydration"
+        },
+        {
+          "id": "healthy_cooking",
+          "label": "Healthy Cooking"
+        }
+      ],
+      "explanation": "Understanding different aspects of healthy eating can improve overall well-being."
+    },
+    {
+      "id": 2,
+      "title": "Classifying Historical Events",
+      "question": "Match each event with its correct historical period.",
+      "rows": [
+        {
+          "text": "The fall of the Berlin Wall in 1989.",
+          "correctAnswer": "modern_history"
+        },
+        {
+          "text": "The signing of the Declaration of Independence in 1776.",
+          "correctAnswer": "early_modern_history"
+        },
+        {
+          "text": "The construction of the Great Pyramid of Giza around 2560 BCE.",
+          "correctAnswer": "ancient_history"
+        }
+      ],
+      "columns": [
+        {
+          "id": "ancient_history",
+          "label": "Ancient History"
+        },
+        {
+          "id": "early_modern_history",
+          "label": "Early Modern History"
+        },
+        {
+          "id": "modern_history",
+          "label": "Modern History"
+        }
+      ],
+      "explanation": "Classifying events by their historical period helps in understanding their significance in context."
+    },
+    {
+      "id": 3,
+      "title": "Sorting Tech Innovations",
+      "question": "Identify the correct category for each tech innovation.",
+      "rows": [
+        {
+          "text": "The development of the first smartphone in 1992.",
+          "correctAnswer": "consumer_technology"
+        },
+        {
+          "text": "The invention of the steam engine in the 18th century.",
+          "correctAnswer": "industrial_technology"
+        },
+        {
+          "text": "The launch of the Hubble Space Telescope in 1990.",
+          "correctAnswer": "space_technology"
+        }
+      ],
+      "columns": [
+        {
+          "id": "consumer_technology",
+          "label": "Consumer Technology"
+        },
+        {
+          "id": "industrial_technology",
+          "label": "Industrial Technology"
+        },
+        {
+          "id": "space_technology",
+          "label": "Space Technology"
+        }
+      ],
+      "explanation": "Categorizing tech innovations highlights the diversity of technological advancements."
+    }
+  ],
+  "sections": [
+    {
+      "title": "Healthy Living",
+      "description": "Learn the key aspects of maintaining a healthy lifestyle.",
+      "examples": [
+        {
+          "title": "Balanced Diet",
+          "content": "A diet that includes all the essential nutrients.",
+          "examples": [
+            "Eating whole grains, fruits, and vegetables.",
+            "Including lean proteins and healthy fats."
+          ],
+          "tips": [
+            "Plan your meals in advance.",
+            "Avoid skipping breakfast."
+          ]
+        },
+        {
+          "title": "Hydration",
+          "content": "The importance of drinking enough water daily.",
+          "examples": [
+            "Drinking at least 8 cups of water per day.",
+            "Limiting caffeine and sugary drinks."
+          ],
+          "tips": [
+            "Carry a reusable water bottle.",
+            "Set reminders to drink water."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "History Lessons",
+      "description": "Understanding the timeline of historical events.",
+      "examples": [
+        {
+          "title": "Ancient History",
+          "content": "Events that occurred before the fall of the Roman Empire.",
+          "examples": [
+            "Construction of the Colosseum.",
+            "The reign of Cleopatra."
+          ],
+          "tips": [
+            "Explore artifacts and historical sites.",
+            "Read books about ancient civilizations."
+          ]
+        },
+        {
+          "title": "Modern History",
+          "content": "Events that shaped the world from the 19th century onwards.",
+          "examples": [
+            "The Industrial Revolution.",
+            "World Wars I and II."
+          ],
+          "tips": [
+            "Watch documentaries.",
+            "Visit museums and archives."
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Technology Evolution",
+      "description": "Explore how technology has transformed industries over time.",
+      "examples": [
+        {
+          "title": "Industrial Technology",
+          "content": "Innovations that revolutionized manufacturing and production.",
+          "examples": [
+            "Assembly line production.",
+            "The invention of electricity."
+          ],
+          "tips": [
+            "Research key industrial milestones.",
+            "Understand the societal impact of these innovations."
+          ]
+        },
+        {
+          "title": "Space Technology",
+          "content": "Technological advancements that enable space exploration.",
+          "examples": [
+            "Satellite communication systems.",
+            "Mars rover missions."
+          ],
+          "tips": [
+            "Read about space missions.",
+            "Follow developments in space agencies like NASA."
+          ]
+        }
+      ]
+    }
+  ]
+}

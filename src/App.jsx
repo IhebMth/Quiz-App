@@ -9,6 +9,7 @@ import ClickToChangeWithExample from './components/clickToChange/ClickToChangeWi
 import SingleAnswerWithExample from './components/singleAnswer/SingleAnswerWithAnExample';
 import MultipleAnswerWithExample from './components/multipleAnswers/MultipleAnswersWithAnExample';
 import SequencingWithExample from './components/sequencing/SequincingWithAnExample';
+import TableExercisesWithAnExample from './components/tableExercise/TableExercisesWithAnExample';
 const App = () => {
   return (
     <Router>
@@ -23,6 +24,7 @@ const App = () => {
             <Route path="/single-answer" element={<SingleAnswerWithExample />} />
             <Route path="/multiple-answers" element={<MultipleAnswerWithExample />} />
             <Route path="/sequencing" element={<SequencingWithExample />} />
+            <Route path="/organize-information-by-topic" element={<TableExercisesWithAnExample />} />
 
           </Routes>
       </div>

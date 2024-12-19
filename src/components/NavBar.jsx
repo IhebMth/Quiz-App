@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -86,7 +86,7 @@ const Navbar = () => {
                     className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
                     onClick={handleDropdownClose}
                   >
-                    Click To Change 
+                    Click To Change
                   </Link>
                 </li>
                 <li>
@@ -114,6 +114,15 @@ const Navbar = () => {
                     onClick={handleDropdownClose}
                   >
                     Sequencing
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/organize-information-by-topic"
+                    className="block px-4 py-2 hover:bg-blue-100 transition duration-300"
+                    onClick={handleDropdownClose}
+                  >
+                    organize-information
                   </Link>
                 </li>
               </ul>
