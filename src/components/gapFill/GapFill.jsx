@@ -1,4 +1,3 @@
-// GapFill.jsx
 import { useState, useEffect, useRef, createRef } from "react";
 import { Volume2 } from "lucide-react";
 import Stats from "../Stats";
@@ -17,6 +16,7 @@ export default function GapFill() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [showFinalResults, setShowFinalResults] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const [results, setResults] = useState({
     questions: [],
     times: [],
@@ -32,6 +32,16 @@ export default function GapFill() {
   const pointsPerQuestion = 100 / totalExercises;
 
   useEffect(() => {
+    const focusTimeout = setTimeout(() => {
+      if (currentExercise && inputRefs.current[0]?.current && isInitialized) {
+        inputRefs.current[0].current.focus();
+      }
+    }, 100);
+  
+    return () => clearTimeout(focusTimeout);
+  }, [currentExerciseIndex, isInitialized]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
         setTimeElapsed((prev) => prev + 1);
@@ -44,6 +54,7 @@ export default function GapFill() {
     if (currentExercise) {
       setUserAnswers(new Array(currentExercise.word.length).fill(""));
       inputRefs.current = currentExercise.blanks.map(() => createRef());
+      setIsInitialized(true);
     }
   }, [currentExerciseIndex]);
 
@@ -167,6 +178,7 @@ export default function GapFill() {
       finalScore: 0,
     });
     setUserAnswers([]);
+    setIsInitialized(false);
   };
 
   const renderWord = () => {

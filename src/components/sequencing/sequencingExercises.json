@@ -26,17 +26,16 @@
         "type": "sentence",
         "question": "Unscramble the words to make a complete sentence",
         "contentType": "text",
-        "correctOrder": ["The", "cat", "sits", "on", "the", "mat"],
+        "correctOrder": ["The", "dog", "sleeps", "at", "night"],
         "options": [
-          { "id": "1", "content": "mat", "order": 6 },
-          { "id": "2", "content": "sits", "order": 3 },
-          { "id": "3", "content": "cat", "order": 2 },
-          { "id": "4", "content": "the", "order": 5 },
-          { "id": "5", "content": "The", "order": 1 },
-          { "id": "6", "content": "on", "order": 4 }
+          { "id": "1", "content": "night", "order": 5 },
+          { "id": "2", "content": "sleeps", "order": 3 },
+          { "id": "3", "content": "dog", "order": 2 },
+          { "id": "4", "content": "at", "order": 4 },
+          { "id": "5", "content": "The", "order": 1 }
         ],
-        "solution": "The correct sentence is 'The cat sits on the mat', where each word is placed in its proper position to form a grammatically correct statement."
-      },
+        "solution": "The correct sentence is 'The dog sleeps at night', where each word is placed in its proper position to form a grammatically correct statement."
+      },      
       {
         "id": 3,
         "type": "image-word",

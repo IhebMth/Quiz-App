@@ -9,7 +9,8 @@ import { X } from 'lucide-react';
 export default function Highlight() {
   const exercises = ExercisesData.exercises;
   const inputRef = useRef(null);
-
+  const wordRefs = useRef({});
+  
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [selectedItems, setSelectedItems] = useState(new Set());
   const [timeElapsed, setTimeElapsed] = useState(0);
@@ -20,6 +21,7 @@ export default function Highlight() {
   const [showFinalResults, setShowFinalResults] = useState(false);
   const [corrections, setCorrections] = useState({});
   const [selectedWord, setSelectedWord] = useState(null);
+  const [popupPosition, setPopupPosition] = useState({ left: '50%', transform: 'translateX(-50%)' });
   const [showInput, setShowInput] = useState(false);
   const [results, setResults] = useState({
     questions: [],
@@ -72,9 +74,36 @@ export default function Highlight() {
     setSelectedItems(newSelected);
   };
 
+  const calculatePopupPosition = (wordElement) => {
+    if (!wordElement) return;
+
+    const rect = wordElement.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const popupWidth = 156; // width of input (128px) + padding (16px) + borders (2px)
+    // const margin = 16; // minimum margin from viewport edge
+    
+    // Check if there's enough space on the right
+    const spaceOnRight = viewportWidth - rect.left;
+    
+    if (rect.left < popupWidth / 2) {
+      // Word is too close to left edge
+      return { left: '0px', transform: 'none' };
+    } else if (spaceOnRight < popupWidth / 2) {
+      // Word is too close to right edge
+      const rightAlignedLeft = `calc(100% - ${popupWidth}px)`;
+      return { left: rightAlignedLeft, transform: 'none' };
+    } else {
+      // Center the popup above the word
+      return { left: '50%', transform: 'translateX(-50%)' };
+    }
+  };
+
   const handleWordClick = (word, index, event) => {
     if (currentExercise.type === "pronouns") {
       event.stopPropagation();
+      const wordElement = wordRefs.current[`${word}-${index}`];
+      const newPosition = calculatePopupPosition(wordElement);
+      setPopupPosition(newPosition);
       setSelectedWord({ word, index });
       setShowInput(true);
       if (!corrections[`${word}-${index}`]) {
@@ -85,15 +114,9 @@ export default function Highlight() {
       }
     } else {
       const newSelected = new Set(selectedItems);
-      let key;
-      
-      if (currentExercise.type === "redundant-phrase") {
-        // For redundant-phrase, create a unique key with word and index
-        key = `${word}-${index}`;
-      } else if (currentExercise.type === "redundant" || currentExercise.type === "nouns") {
-        // For other types, keep just the clean word as before
-        key = word.replace(/[.,!?]/g, '');
-      }
+      let key = currentExercise.type === "redundant-phrase"
+        ? `${word}-${index}`
+        : word;
       
       if (newSelected.has(key)) {
         newSelected.delete(key);
@@ -103,6 +126,7 @@ export default function Highlight() {
       setSelectedItems(newSelected);
     }
   };
+
 
   const handleCorrectionChange = (e, word, index) => {
     setCorrections(prev => ({
@@ -369,7 +393,11 @@ export default function Highlight() {
         : cleanWord;
  
       return (
-        <span key={index} className="relative inline-block mr-3 mb-2 group mt-8">
+        <span 
+          key={index} 
+          className="relative inline-block mr-3 mb-2 group mt-8"
+          ref={el => wordRefs.current[`${cleanWord}-${index}`] = el}
+        >
           {/* Correction display */}
           {currentExercise.type === "pronouns" &&
            corrections[`${cleanWord}-${index}`] &&
@@ -409,9 +437,10 @@ export default function Highlight() {
            showInput && (
             <div
               ref={inputRef}
-              className="absolute z-10 shadow-lg rounded-lg p-2 border border-gray-200 bg-white left-1/2 transform -translate-x-1/2"
+              className="absolute z-10 shadow-lg rounded-lg p-2 border border-gray-200 bg-white"
               style={{
-                bottom: 'calc(100% + 8px)'
+                bottom: 'calc(100% + 8px)',
+                ...popupPosition
               }}
             >
               <div className="relative">
@@ -431,13 +460,19 @@ export default function Highlight() {
                   <X className="w-4 h-4 text-gray-500" />
                 </button>
               </div>
-              <div className="absolute w-3 h-3 bg-white transform rotate-45 -bottom-1.5 left-1/2 -translate-x-1/2 border-b border-r border-gray-200"></div>
+              <div 
+                className="absolute w-3 h-3 bg-white transform rotate-45 -bottom-1.5 border-b border-r border-gray-200"
+                style={{
+                  left: popupPosition.transform === 'none' ? '16px' : '50%',
+                  transform: popupPosition.transform === 'none' ? 'none' : 'translateX(-50%)'
+                }}
+              ></div>
             </div>
           )}
         </span>
       );
     });
-  }
+  };
 
   const renderText = () => {
     switch (currentExercise.type) {
@@ -478,12 +513,12 @@ export default function Highlight() {
   }
 
   return (
-    <div className="relative bg-white pt-3 sm:pt-5">
+    <div className="relative bg-white  pt-3 sm:pt-5">
     <div className="relative max-w-[1400px] mx-auto px-2 sm:px-4 md:px-6 lg:px-8">
       <div className="flex-1 w-full">
         <div className="max-w-[1000px] mx-auto">
-          <div className="min-h-[75vh] relative overflow-hidden">
-            <div className="block sm:hidden mb-4 sm:mb-6">
+          <div className="min-h-[75vh] p-2 relative overflow-hidden">
+            <div className="block sm:hidden  mb-4 sm:mb-6">
               <Stats
                 questionNumber={currentExerciseIndex + 1}
                 totalQuestions={totalExercises}

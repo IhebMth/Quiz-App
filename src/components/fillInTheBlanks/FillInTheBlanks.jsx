@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Stats from "../Stats";
 import Feedback from "../FeedBack";
 import FinalResults from "../FinalResults";
@@ -22,10 +22,20 @@ export default function WordCompletion() {
     finalScore: 0,
   });
 
+  // Add ref for input focus management
+  const inputRef = useRef(null);
+
   const exercises = exercisesData.exercises;
   const currentExercise = exercises[currentExerciseIndex];
   const totalExercises = exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
+
+  // Auto-focus input when component mounts and when exercise changes
+  useEffect(() => {
+    if (inputRef.current && !showFinalResults && !showFeedback && !showIncorrectFeedback) {
+      inputRef.current.focus();
+    }
+  }, [currentExerciseIndex, showFeedback, showIncorrectFeedback, showFinalResults]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -110,6 +120,7 @@ export default function WordCompletion() {
           }}
         />
         <input
+          ref={inputRef}
           type="text"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
@@ -134,6 +145,7 @@ export default function WordCompletion() {
           <span className="text-2xl">=</span>
         </div>
         <input
+          ref={inputRef}
           type="text"
           value={userAnswer}
           onChange={(e) => setUserAnswer(e.target.value)}
@@ -164,6 +176,7 @@ export default function WordCompletion() {
             />
             <div className="relative">
               <input
+                ref={inputRef}
                 type="text"
                 value={userAnswer}
                 onChange={(e) => setUserAnswer(e.target.value)}
@@ -197,11 +210,11 @@ export default function WordCompletion() {
         exercises={exercises.map((exercise) => ({
           sentence: exercise.sentence,
           given: exercise.given,
-          suffix: exercise.suffix || "", // Default to empty string if not provided
-          answer: exercise.answer, // Pass the correct answer
-          explanation: exercise.explanation, // Optional, if explanations are used
+          suffix: exercise.suffix || "",
+          answer: exercise.answer,
+          explanation: exercise.explanation,
         }))}
-        exerciseType="fillInTheBlanks" // or "dragAndDrop"
+        exerciseType="fillInTheBlanks"
         onRestart={() => {
           setCurrentExerciseIndex(0);
           setTimeElapsed(0);
@@ -221,7 +234,7 @@ export default function WordCompletion() {
   }
 
   return (
-    <div className=" relative  pt-5">
+    <div className="relative pt-5">
       <div className="relative max-w-[1400px] mx-auto">
         <div className="flex-1 w-full">
           <div className="max-w-[1000px] mx-auto">
@@ -247,18 +260,18 @@ export default function WordCompletion() {
                         type="submit"
                         disabled={!userAnswer.trim()}
                         className="
-    bg-gradient-to-r from-blue-500 to-blue-600
-    hover:from-blue-600 hover:to-blue-700
-    disabled:from-gray-400 disabled:to-gray-500
-    text-white font-semibold sm:py-4 py-2 px-10
-    rounded-xl text-lg
-    transform transition-all duration-200
-    hover:-translate-y-1 hover:shadow-lg
-    disabled:hover:translate-y-0
-    disabled:hover:shadow-none
-    disabled:cursor-not-allowed
-    sm:w-auto
-  "
+                          bg-gradient-to-r from-blue-500 to-blue-600
+                          hover:from-blue-600 hover:to-blue-700
+                          disabled:from-gray-400 disabled:to-gray-500
+                          text-white font-semibold sm:py-4 py-2 px-10
+                          rounded-xl text-lg
+                          transform transition-all duration-200
+                          hover:-translate-y-1 hover:shadow-lg
+                          disabled:hover:translate-y-0
+                          disabled:hover:shadow-none
+                          disabled:cursor-not-allowed
+                          sm:w-auto
+                        "
                       >
                         Check Answers
                       </button>

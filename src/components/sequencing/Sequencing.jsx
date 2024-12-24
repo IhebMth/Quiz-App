@@ -39,18 +39,17 @@ export default function Sequence() {
     finalScore: 0,
   });
 
-  // Updated sensor configuration for smoother dragging
+  
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 0,
-      tolerance: 5,
     },
   });
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
       delay: 0,
-      tolerance: 5,
+      tolerance: 0,
     },
   });
 
@@ -77,7 +76,6 @@ export default function Sequence() {
     const { active } = event;
     setActiveId(active.id);
     
-    // Apply styles to dragged element
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = 'none';
@@ -86,7 +84,6 @@ export default function Sequence() {
       dragElement.style.zIndex = '9999';
     }
     
-    // Apply global styles
     document.body.style.cursor = 'grabbing';
     document.body.style.userSelect = 'none';
     document.body.style.overflow = 'hidden';
@@ -116,7 +113,6 @@ export default function Sequence() {
       });
     }
 
-    // Clean up styles
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
       dragElement.style.touchAction = '';
@@ -134,7 +130,6 @@ export default function Sequence() {
   };
 
   const handleDragCancel = () => {
-    // Clean up styles
     if (activeId) {
       const dragElement = document.getElementById(activeId);
       if (dragElement) {
@@ -211,7 +206,7 @@ export default function Sequence() {
   };
 
   const getContainerStyle = (type) => {
-    const baseStyles = "touch-none relative";  // Added touch-none for better mobile handling
+    const baseStyles = "touch-none relative";
     
     if (type === 'phrases') {
       return `${baseStyles} flex flex-wrap gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide`;
@@ -223,6 +218,10 @@ export default function Sequence() {
         ? `grid-cols-${itemCount}` 
         : 'grid-cols-4 sm:grid-cols-6';
       return `${baseStyles} grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
+    }
+
+    if (type === 'sentence') {
+      return `${baseStyles} flex flex-row flex-nowrap items-center gap-2 p-2 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-fit mx-auto`;
     }
 
     return `${baseStyles} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full`;
@@ -293,9 +292,13 @@ export default function Sequence() {
                       <div className="text-base sm:text-lg">
                         <SortableContext
                           items={items}
-                          strategy={currentExercise.type === 'phrases' 
-                            ? horizontalListSortingStrategy 
-                            : rectSwappingStrategy}
+                          strategy={
+                            currentExercise.type === 'sentence' 
+                              ? horizontalListSortingStrategy 
+                              : currentExercise.type === 'phrases'
+                                ? horizontalListSortingStrategy
+                                : rectSwappingStrategy
+                          }
                         >
                           <div className={getContainerStyle(currentExercise.type)}>
                             {items.map((item) => (
