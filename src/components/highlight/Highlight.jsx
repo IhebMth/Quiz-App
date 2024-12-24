@@ -79,15 +79,15 @@ export default function Highlight() {
 
     const rect = wordElement.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
-    const popupWidth = 156; // width of input (128px) + padding (16px) + borders (2px)
-    // const margin = 16; // minimum margin from viewport edge
+    const popupWidth = 156;
+    const containerRect = wordElement.closest('.text-base')?.getBoundingClientRect();
+    const isFirstWordInLine = containerRect && Math.abs(rect.left - containerRect.left) < 20; // Increased threshold
     
-    // Check if there's enough space on the right
     const spaceOnRight = viewportWidth - rect.left;
     
-    if (rect.left < popupWidth / 2) {
-      // Word is too close to left edge
-      return { left: '0px', transform: 'none' };
+    if (isFirstWordInLine || rect.left < popupWidth / 2) {
+      // Word is first in line or too close to left edge
+      return { left: '0px', transform: 'none' }; // Increased offset
     } else if (spaceOnRight < popupWidth / 2) {
       // Word is too close to right edge
       const rightAlignedLeft = `calc(100% - ${popupWidth}px)`;
@@ -96,7 +96,7 @@ export default function Highlight() {
       // Center the popup above the word
       return { left: '50%', transform: 'translateX(-50%)' };
     }
-  };
+};
 
   const handleWordClick = (word, index, event) => {
     if (currentExercise.type === "pronouns") {
