@@ -41,7 +41,7 @@
         "type": "image-word",
         "question": "Put the letters in order to spell what's in the image",
         "contentType": "mixed",
-        "image": "/images/dog.png",
+        "image": "/wp-content/themes/react-tailwind-theme/dist/images/dog.png",
         "correctOrder": ["d", "o", "g"],
         "options": [
           { "id": "1", "content": "g", "order": 3 },
@@ -107,7 +107,7 @@
         "examples": [
           {
             "type": "image-word",
-            "image": "/images/cat.png",
+            "image": "/wp-content/themes/react-tailwind-theme/dist/images/cat.png",
             "correctSequence": ["c", "a", "t"],
             "explanation": "Simple three-letter words often follow a consonant-vowel-consonant pattern.",
             "pattern": "CVC (Consonant-Vowel-Consonant) pattern",

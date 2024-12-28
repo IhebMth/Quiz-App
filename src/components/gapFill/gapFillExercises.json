@@ -3,7 +3,7 @@
       {
         "id": 1,
         "word": "dolphin",
-        "image": "/images/dolphin.png",
+        "image": "/wp-content/themes/react-tailwind-theme/dist/images/dolphin.png",
         "blanks": [2, 3],
         "type": "consonant_blend",
         "question": "Fill in the missing consonant blend",
@@ -15,7 +15,7 @@
       {
         "id": 2,
         "word": "elephant",
-        "image": "/images/elephant.png",
+        "image": "/wp-content/themes/react-tailwind-theme/dist/images/elephant.png",
         "blanks": [0, 1],
         "type": "consonant_blend",
         "question": "Fill in the missing consonant blend",
@@ -27,7 +27,7 @@
       {
         "id": 3,
         "word": "lion",
-        "image": "/images/lion.png",
+        "image": "/wp-content/themes/react-tailwind-theme/dist/images/lion.png",
         "blanks": [0, 1],
         "type": "consonant_blend",
         "question": "Fill in the missing consonant blend",
@@ -46,7 +46,7 @@
             "word": "stop",
             "blanks": [0, 1],
             "explanation": "The 'st' blend creates a combined sound at the start",
-            "image": "/images/stop.png",
+            "image": "/wp-content/themes/react-tailwind-theme/dist/images/stop.png",
             "pattern": "Initial consonant blend 'st'",
             "soundClue": "Sounds like /st/",
             "commonWords": ["stay", "step", "stick"]
@@ -55,7 +55,7 @@
             "word": "jump",
             "blanks": [2, 3],
             "explanation": "The 'mp' blend creates a combined sound at the end",
-            "image": "/images/jump.png",
+            "image": "/wp-content/themes/react-tailwind-theme/dist/images/jump.png",
             "pattern": "Final consonant blend 'mp'",
             "soundClue": "Sounds like /mp/",
             "commonWords": ["bump", "lamp", "camp"]
@@ -70,7 +70,7 @@
             "word": "cat",
             "blanks": [1],
             "explanation": "Short 'a' sound in the middle",
-            "image": "/images/cat.png",
+            "image": "/wp-content/themes/react-tailwind-theme/dist/images/cat.png",
             "pattern": "CVC pattern with short 'a'",
             "soundClue": "Sounds like /æ/",
             "commonWords": ["hat", "bat", "rat"]

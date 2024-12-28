@@ -8,7 +8,7 @@ const Stats = ({ questionNumber, totalQuestions, timeElapsed, score }) => {
   };
 
   return (
-    <div className="w-full rounded-lg shadow-sm mb-4 sm:mb-0 ">
+    <div className="w-auto rounded-lg shadow-sm mb-4 sm:mb-0  ">
       {/* Mobile View - Row Layout for Time, Questions, SmartScore */}
       <div className="bg-gray-100  grid grid-cols-3  sm:hidden w-full pt-5  m-0">
       <div className="flex flex-col items-center w-full border-b-4 border-green-600">
@@ -37,7 +37,7 @@ const Stats = ({ questionNumber, totalQuestions, timeElapsed, score }) => {
       </div>
 
       {/* Desktop View - Vertical Layout */}
-      <div className="hidden sm:flex flex-col items-center space-y-2 bg-gray-100 border border-gray-100 ml-5 rounded-lg w-full">
+      <div className="hidden sm:flex flex-col items-center space-y-2 bg-gray-100 border border-gray-100 ml-5 rounded-lg w-auto ">
         {/* Questions Answered Section */}
         <div className="flex flex-col items-center w-full">
           <p className="text-sm font-bold text-white px-2 py-1 w-full text-center" style={{ backgroundColor: '#16a34a' }}>

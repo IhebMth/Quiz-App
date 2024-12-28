@@ -4,7 +4,7 @@
       "id": 1,
       "type": "syllable",
       "word": "volcano",
-      "image": "/images/volcano.png",
+      "image": "/wp-content/themes/react-tailwind-theme/dist/images/volcano.png",
       "syllables": ["vol", "ca", "no"],
       "correctAnswer": 3,
       "options": [2, 3, 4],
@@ -14,7 +14,7 @@
       "id": 2,
       "type": "syllable",
       "word": "penguin",
-      "image": "/images/penguin.png",
+      "image": "/wp-content/themes/react-tailwind-theme/dist/images/penguin.png",
       "syllables": ["pen", "guin"],
       "correctAnswer": 2,
       "options": [1, 2, 3],
@@ -30,17 +30,17 @@
       "options": [
         {
           "word": "rope",
-          "image": "/images/rope.png",
+          "image": "/wp-content/themes/react-tailwind-theme/dist/images/rope.png",
           "isCorrect": true
         },
         {
           "word": "cat",
-          "image": "/images/cat.png",
+          "image": "/wp-content/themes/react-tailwind-theme/dist/images/cat.png",
           "isCorrect": false
         },
         {
           "word": "ball",
-          "image": "/images/football.png",
+          "image": "/wp-content/themes/react-tailwind-theme/dist/images/football.png",
           "isCorrect": false
         }
       ]
