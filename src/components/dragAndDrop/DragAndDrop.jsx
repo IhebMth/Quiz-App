@@ -279,9 +279,9 @@ const DragAndDrop = () => {
   );
 
   return (
-    <div className="min-h-screen sm:p-4">
+    <div className="min-h-screen ">
       <div className="relative flex sm:p-12 max-w-[1400px] mx-auto">
-        <div className="hidden sm:block absolute top-8 right-3 z-10 w-[100px]">
+        <div className="hidden sm:block absolute top-8 right-3 z-10 w-auto ">
           <Stats
             questionNumber={currentExerciseIndex + 1}
             totalQuestions={totalExercises}
@@ -291,8 +291,8 @@ const DragAndDrop = () => {
         </div>
 
         <div className="flex-1 sm:pr-[80px] w-full">
-          <div className="relative w-full">
-            <div className="sm:hidden w-full">
+          <div className="relative ">
+            <div className="sm:hidden sm:pr-[0px] ">
               <Stats
                 questionNumber={currentExerciseIndex + 1}
                 totalQuestions={totalExercises}
@@ -301,7 +301,7 @@ const DragAndDrop = () => {
               />
             </div>
 
-            <div className="max-w-[1000px] mx-auto w-full">
+            <div className="max-w-[1000px] mx-auto w-full sm:pt-5">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <h1 className="text-xl mx-4 sm:text-3xl font-bold text-green-600 mb-8">
                   {currentExercise.question}

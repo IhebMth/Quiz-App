@@ -6,6 +6,7 @@ import {
   useSensor,
   useSensors,
   pointerWithin,
+  MeasuringStrategy,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -13,13 +14,13 @@ import {
   rectSwappingStrategy,
   arrayMove,
 } from "@dnd-kit/sortable";
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import SortableItem from "./SortableItem";
 import Stats from "../Stats";
 import Feedback from "../FeedBack";
 import FinalResults from "../FinalResults";
 import IncorrectSequencingFeedback from "./IncorrectSequencingFeedback";
-import exercisesData from './sequencingExercises.json';
+import exercisesData from "./sequencingExercises.json";
 
 export default function Sequence() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -39,7 +40,6 @@ export default function Sequence() {
     finalScore: 0,
   });
 
-  
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
       distance: 0,
@@ -66,7 +66,7 @@ export default function Sequence() {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!showFinalResults) {
-        setTimeElapsed(prev => prev + 1);
+        setTimeElapsed((prev) => prev + 1);
       }
     }, 1000);
     return () => clearInterval(timer);
@@ -78,16 +78,8 @@ export default function Sequence() {
     
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
-      dragElement.style.touchAction = 'none';
-      dragElement.style.webkitUserSelect = 'none';
-      dragElement.style.webkitTouchCallout = 'none';
-      dragElement.style.zIndex = '9999';
+      dragElement.classList.add('touch-none', 'select-none', 'z-50');
     }
-    
-    document.body.style.cursor = 'grabbing';
-    document.body.style.userSelect = 'none';
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('dragging');
   };
 
   const handleDragOver = (event) => {
@@ -115,17 +107,9 @@ export default function Sequence() {
 
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
-      dragElement.style.touchAction = '';
-      dragElement.style.webkitUserSelect = '';
-      dragElement.style.webkitTouchCallout = '';
-      dragElement.style.zIndex = '';
+      dragElement.classList.remove('touch-none', 'select-none', 'z-50');
     }
 
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-    document.body.style.overflow = '';
-    document.body.classList.remove('dragging');
-    
     setActiveId(null);
   };
 
@@ -133,29 +117,21 @@ export default function Sequence() {
     if (activeId) {
       const dragElement = document.getElementById(activeId);
       if (dragElement) {
-        dragElement.style.touchAction = '';
-        dragElement.style.webkitUserSelect = '';
-        dragElement.style.webkitTouchCallout = '';
-        dragElement.style.zIndex = '';
+        dragElement.classList.remove('touch-none', 'select-none', 'z-50');
       }
     }
 
-    document.body.style.cursor = '';
-    document.body.style.userSelect = '';
-    document.body.style.overflow = '';
-    document.body.classList.remove('dragging');
-    
     setActiveId(null);
   };
 
   const handleGotIt = () => {
     setShowIncorrectFeedback(false);
     setShowFeedback(false);
-    
+
     if (currentExerciseIndex + 1 < totalExercises) {
-      setCurrentExerciseIndex(prev => prev + 1);
+      setCurrentExerciseIndex((prev) => prev + 1);
     } else {
-      setResults(prev => ({
+      setResults((prev) => ({
         ...prev,
         finalScore: score,
       }));
@@ -164,10 +140,10 @@ export default function Sequence() {
   };
 
   const checkAnswer = () => {
-    const isSequenceCorrect = items.every((item, index) =>
-      item.order === index + 1
+    const isSequenceCorrect = items.every(
+      (item, index) => item.order === index + 1
     );
-    
+
     setIsCorrect(isSequenceCorrect);
     setShowFeedback(true);
 
@@ -177,7 +153,7 @@ export default function Sequence() {
         ...results.questions,
         {
           isCorrect: isSequenceCorrect,
-          userAnswer: items.map(item => item.content),
+          userAnswer: items.map((item) => item.content),
           correctAnswer: currentExercise.correctOrder,
           explanation: currentExercise.solution,
         },
@@ -187,15 +163,15 @@ export default function Sequence() {
       wrongAnswers: results.wrongAnswers + (isSequenceCorrect ? 0 : 1),
       finalScore: isSequenceCorrect ? score + pointsPerQuestion : score,
     };
-    
+
     setResults(newResults);
 
     if (isSequenceCorrect) {
-      setScore(prev => prev + pointsPerQuestion);
+      setScore((prev) => prev + pointsPerQuestion);
       setTimeout(() => {
         setShowFeedback(false);
         if (currentExerciseIndex < totalExercises - 1) {
-          setCurrentExerciseIndex(prev => prev + 1);
+          setCurrentExerciseIndex((prev) => prev + 1);
         } else {
           setShowFinalResults(true);
         }
@@ -205,26 +181,24 @@ export default function Sequence() {
     }
   };
 
-  const getContainerStyle = (type) => {
-    const baseStyles = "touch-none relative";
+  const getContainerClass = (type) => {
+    const baseClass = "touch-none select-none relative w-full max-w-full overflow-hidden";
     
     if (type === 'phrases') {
-      return `${baseStyles} flex flex-wrap gap-2 sm:gap-3 items-start min-h-[100px] p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 scrollbar-hide`;
+      return `${baseClass} flex flex-col items-start p-4 backdrop-blur-sm`;
     }
     
     if (type === 'image-word') {
       const itemCount = items.length;
-      const gridCols = itemCount <= 4 
-        ? `grid-cols-${itemCount}` 
-        : 'grid-cols-4 sm:grid-cols-6';
-      return `${baseStyles} grid ${gridCols} gap-2 sm:gap-3 p-3 sm:p-6 rounded-xl backdrop-blur-sm border border-gray-100 w-48 sm:w-72`;
+      const gridCols = itemCount <= 4 ? `grid-cols-${itemCount}` : 'grid-cols-4';
+      return `${baseClass} grid ${gridCols} gap-2 p-4 rounded-xl mx-auto`;
     }
-
+    
     if (type === 'sentence') {
-      return `${baseStyles} flex flex-row flex-nowrap items-center gap-2 p-2 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-fit mx-auto`;
+      return `${baseClass} flex flex-row flex-nowrap items-center gap-2 p-4`;
     }
-
-    return `${baseStyles} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 p-3 sm:p-6 bg-blue-50/80 rounded-xl backdrop-blur-sm border border-gray-100 w-full`;
+    
+    return `${baseClass} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4`;
   };
 
   if (showFinalResults) {
@@ -251,11 +225,12 @@ export default function Sequence() {
   }
 
   return (
-    <div className="relative pt-3 sm:pt-5">
-      <div className="relative max-w-[1400px] mx-auto px-3 sm:px-5">
-        <div className="flex-1 w-full">
-          <div className="max-w-[1000px] mx-auto">
-            <div className="sm:min-h-[75vh] relative overflow-hidden">
+    <div className="relative w-full max-w-full overflow-hidden">
+      <div className="relative max-w-[1400px] w-full mx-auto px-3 sm:px-5">
+        <div className="flex-1 w-full max-w-full">
+          <div className="max-w-[1000px] w-full mx-auto">
+            <div className="sm:min-h-[75vh] relative w-full max-w-full">
+              {/* Stats for mobile */}
               <div className="block sm:hidden mb-4 sm:mb-6">
                 <Stats
                   questionNumber={currentExerciseIndex + 1}
@@ -265,9 +240,9 @@ export default function Sequence() {
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row justify-between bg-white items-start mx-2 sm:m-5 p-3 sm:p-5 sm:mt-20 rounded-xl shadow-lg">
-                <div className="flex flex-col flex-1 w-full">
-                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-green-600 mb-3 sm:mb-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start mx-2 sm:m-5 sm:mt-20 w-full max-w-full">
+                <div className="flex flex-col flex-1 w-full max-w-full">
+                  <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-green-600 mb-3 sm:mb-4 break-words">
                     {currentExercise.question}
                   </h1>
 
@@ -279,7 +254,7 @@ export default function Sequence() {
                     />
                   )}
 
-                  <div className="space-y-4 sm:space-y-6">
+                  <div className="space-y-4 sm:space-y-6 w-full">
                     <DndContext
                       sensors={sensors}
                       collisionDetection={pointerWithin}
@@ -288,19 +263,22 @@ export default function Sequence() {
                       onDragEnd={handleDragEnd}
                       onDragCancel={handleDragCancel}
                       modifiers={[restrictToWindowEdges]}
+                      measuring={{
+                        droppable: {
+                          strategy: MeasuringStrategy.Always,
+                        },
+                      }}
                     >
-                      <div className="text-base sm:text-lg">
+                      <div className="text-base sm:text-lg w-full max-w-full">
                         <SortableContext
                           items={items}
                           strategy={
-                            currentExercise.type === 'sentence' 
-                              ? horizontalListSortingStrategy 
-                              : currentExercise.type === 'phrases'
-                                ? horizontalListSortingStrategy
-                                : rectSwappingStrategy
+                            currentExercise.type === "sentence" || currentExercise.type === "phrases"
+                              ? horizontalListSortingStrategy
+                              : rectSwappingStrategy
                           }
                         >
-                          <div className={getContainerStyle(currentExercise.type)}>
+                          <div className={getContainerClass(currentExercise.type)}>
                             {items.map((item) => (
                               <SortableItem
                                 key={item.id}
@@ -318,16 +296,7 @@ export default function Sequence() {
                     <div className="flex justify-center mt-4 sm:mt-8">
                       <button
                         onClick={checkAnswer}
-                        className="
-                          bg-gradient-to-r from-blue-500 to-blue-600
-                          hover:from-blue-600 hover:to-blue-700
-                          text-white font-semibold py-2 sm:py-4 px-6 sm:px-10
-                          rounded-xl text-base sm:text-lg
-                          transform transition-all duration-200
-                          hover:-translate-y-1 hover:shadow-lg
-                          active:translate-y-0 active:shadow-md
-                          w-full sm:w-auto
-                        "
+                        className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-2 sm:py-4 px-6 sm:px-10 rounded-xl text-base sm:text-lg transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg active:translate-y-0 active:shadow-md w-full sm:w-auto"
                       >
                         Check Answer
                       </button>
@@ -348,7 +317,7 @@ export default function Sequence() {
           </div>
         </div>
       </div>
-      
+
       <Feedback
         isVisible={showFeedback && isCorrect}
         isCorrect={isCorrect}
@@ -358,7 +327,7 @@ export default function Sequence() {
       <IncorrectSequencingFeedback
         isVisible={showIncorrectFeedback}
         currentExercise={currentExercise}
-        userAnswer={items.map(item => item.content)}
+        userAnswer={items.map((item) => item.content)}
         onGotIt={handleGotIt}
       />
     </div>
