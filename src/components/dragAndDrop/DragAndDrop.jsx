@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   DndContext,
   TouchSensor,
@@ -13,6 +13,7 @@ import Stats from "../Stats";
 import FinalResults from "../FinalResults";
 import exercisesData from "./data/dragAndDropExercises.json";
 import IncorrectFeedback from "./InCorrectAnswerFeedBackComponent";
+import getImagePath from "../../utils/imagePaths";
 
 const DragAndDrop = () => {
   const mouseSensor = useSensor(MouseSensor, {
@@ -47,9 +48,25 @@ const DragAndDrop = () => {
   });
 
   const { sensoryExamples } = exercisesData;
-  const currentExercise = exercisesData.exercises[currentExerciseIndex] || {};
-  const totalExercises = exercisesData.exercises.length;
+  const currentExerciseRaw = exercisesData.exercises[currentExerciseIndex] || {};
+    const totalExercises = exercisesData.exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
+
+  // Process the current exercise to use getImagePath for image content
+  const currentExercise = useMemo(() => {
+    if (!currentExerciseRaw.contentType) return currentExerciseRaw;
+
+    return {
+      ...currentExerciseRaw,
+      options: currentExerciseRaw.options.map(option => ({
+        ...option,
+        content: option.type === "image" 
+          ? getImagePath(option.content.split('/').pop()) // Extract filename from path
+          : option.content
+      }))
+    };
+  }, [currentExerciseRaw]);
+
 
   useEffect(() => {
     if (currentExercise) {
@@ -301,7 +318,7 @@ const DragAndDrop = () => {
               />
             </div>
 
-            <div className="max-w-[1000px] mx-auto w-full">
+            <div className="max-w-[1000px] mx-auto w-full sm:pt-5">
               <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
                 <h1 className="text-xl mx-4 sm:text-3xl font-bold text-green-600 mb-8">
                   {currentExercise.question}

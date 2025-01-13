@@ -3,8 +3,12 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import PropTypes from 'prop-types';
 import sequencingExercises from './sequencingExercises.json';
+import getImagePath from '../../utils/imagePaths';
 
 const ExampleItem = ({ correctSequence, explanation, pattern, tip, commonExamples, image }) => {
+  // Process the image path if it exists
+  const processedImagePath = image ? getImagePath(image.split('/').pop()) : null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -14,8 +18,12 @@ const ExampleItem = ({ correctSequence, explanation, pattern, tip, commonExample
       className="bg-white rounded-lg p-6 shadow-md border border-gray-200 mb-4"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-4">
-        {image && (
-          <img src={image} alt="Example" className="w-32 h-32 object-contain rounded-lg" />
+        {processedImagePath && (
+          <img 
+            src={processedImagePath} 
+            alt="Example" 
+            className="w-32 h-32 object-contain rounded-lg"
+          />
         )}
         <div className="space-y-4 flex-1">
           <div className="flex flex-wrap gap-2">

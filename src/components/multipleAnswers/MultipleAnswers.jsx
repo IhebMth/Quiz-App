@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Volume2, Check } from 'lucide-react';
 import Stats from '../Stats';
 import Feedback from '../FeedBack';
 import IncorrectMultipleAnswersFeedback from './IncorrectMultipleAnswersFeedback';
 import FinalResults from '../FinalResults';
 import exercisesData from './multipleAnswersExercises.json';
+import getImagePath from '../../utils/imagePaths';
 
 export default function MultipleAnswers() {
     const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -24,12 +25,35 @@ export default function MultipleAnswers() {
         finalScore: 0,
     });
 
-    const allExercises = [
-        ...exercisesData.soundMatchingExercises.map(ex => ({ ...ex, exerciseType: 'sound_matching' })),
-        ...exercisesData.synonymExercises.map(ex => ({ ...ex, exerciseType: 'synonym' }))
-    ];
-      
-    const currentExercise = allExercises[currentExerciseIndex];
+   // Process exercises to use getImagePath for images
+   const processedExercises = useMemo(() => {
+    const processOptions = (options) => {
+        return options.map(option => ({
+            ...option,
+            image: option.image ? getImagePath(option.image.split('/').pop()) : undefined
+        }));
+    };
+
+    return {
+        soundMatchingExercises: exercisesData.soundMatchingExercises.map(ex => ({
+            ...ex,
+            options: processOptions(ex.options),
+            exerciseType: 'sound_matching'
+        })),
+        synonymExercises: exercisesData.synonymExercises.map(ex => ({
+            ...ex,
+            exerciseType: 'synonym'
+        }))
+    };
+}, []);
+
+const allExercises = useMemo(() => [
+    ...processedExercises.soundMatchingExercises,
+    ...processedExercises.synonymExercises
+], [processedExercises]);
+
+const currentExercise = allExercises[currentExerciseIndex];
+
     const totalExercises = allExercises.length;
     const pointsPerQuestion = 100 / totalExercises;
 

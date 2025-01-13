@@ -3,9 +3,12 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import gapFillExercises from "./gapFillExercises.json";
+import getImagePath from '../../utils/imagePaths';
 
 const ExampleItem = ({ word, blanks, explanation, image, pattern, soundClue, commonWords }) => {
   const letters = word.split("");
+  // Process the image path
+  const processedImagePath = image ? getImagePath(image.split('/').pop()) : null;
 
   return (
     <motion.div
@@ -16,7 +19,13 @@ const ExampleItem = ({ word, blanks, explanation, image, pattern, soundClue, com
       className="bg-white rounded-lg p-6 shadow-md border border-gray-200 mb-4"
     >
       <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 mb-4">
-        <img src={image} alt={word} className="w-32 h-32 object-contain rounded-lg" />
+        {processedImagePath && (
+          <img 
+            src={processedImagePath} 
+            alt={word} 
+            className="w-32 h-32 object-contain rounded-lg"
+          />
+        )}
         <div className="space-y-4">
           <div className="flex items-center text-3xl">
             {letters.map((letter, index) => (

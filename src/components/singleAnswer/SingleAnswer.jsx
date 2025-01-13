@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
+// SingleAnswer.jsx
+import { useState, useEffect, useMemo } from 'react';
 import { Volume2 } from 'lucide-react';
 import Stats from '../Stats';
 import Feedback from '../FeedBack';
 import IncorrectSingleAnswerFeedback from './IncorrectSingleAnswerFeedback';
 import FinalResults from '../FinalResults';
 import exercisesData from './singleAnswerExercises.json';
+import getImagePath from '../../utils/imagePaths';
 
 export default function SingleAnswer() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -25,10 +27,24 @@ export default function SingleAnswer() {
     finalScore: 0,
   });
 
-  const allExercises = [
-    ...exercisesData.syllableExercises.map(ex => ({ ...ex, exerciseType: 'syllable' })),
-    ...exercisesData.rhymingExercises.map(ex => ({ ...ex, exerciseType: 'rhyme' }))
-  ];
+  const allExercises = useMemo(() => {
+    const processedSyllableExercises = exercisesData.syllableExercises.map(ex => ({
+      ...ex,
+      exerciseType: 'syllable',
+      image: getImagePath(ex.image.split('/').pop())
+    }));
+
+    const processedRhymingExercises = exercisesData.rhymingExercises.map(ex => ({
+      ...ex,
+      exerciseType: 'rhyme',
+      options: ex.options.map(opt => ({
+        ...opt,
+        image: getImagePath(opt.image.split('/').pop())
+      }))
+    }));
+
+    return [...processedSyllableExercises, ...processedRhymingExercises];
+  }, []);
   
   const currentExercise = allExercises[currentExerciseIndex];
   const totalExercises = allExercises.length;
@@ -196,7 +212,7 @@ export default function SingleAnswer() {
             >
               <div className="aspect-square relative">
                 <img
-                  src={option.image || ''}
+                  src={option.image}
                   alt={typeof option === 'object' ? option.word : option}
                   className="absolute inset-0 w-full h-full object-cover"
                 />

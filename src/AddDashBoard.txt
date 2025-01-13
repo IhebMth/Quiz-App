@@ -1,0 +1,608 @@
+Step 1: WordPress Backend Setup
+------------------------------
+1. In your WordPress theme directory (themes/astra/), create these files:
+
+functions.php:
+```php
+// Your existing functions.php code remains the same
+
+// Add these new functions to handle exercise types
+function register_exercise_types() {
+    register_post_type('exercise', array(
+        'labels' => array(
+            'name' => 'Exercises',
+            'singular_name' => 'Exercise'
+        ),
+        'public' => true,
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'menu_icon' => 'dashicons-welcome-learn-more'
+    ));
+}
+add_action('init', 'register_exercise_types');
+
+// Add REST API endpoints for exercises
+function register_exercise_api_routes() {
+    register_rest_route('quiz/v1', '/exercises', array(
+        'methods' => 'GET',
+        'callback' => 'get_exercises',
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('quiz/v1', '/exercises', array(
+        'methods' => 'POST',
+        'callback' => 'create_exercise',
+        'permission_callback' => function() {
+            return current_user_can('edit_posts');
+        }
+    ));
+}
+add_action('rest_api_init', 'register_exercise_api_routes');
+
+// Function to get exercises
+function get_exercises() {
+    $args = array(
+        'post_type' => 'exercise',
+        'posts_per_page' => -1
+    );
+    
+    $posts = get_posts($args);
+    $exercises = array();
+    
+    foreach ($posts as $post) {
+        $exercises[] = array(
+            'id' => $post->ID,
+            'type' => get_post_meta($post->ID, 'exercise_type', true),
+            'data' => json_decode(get_post_meta($post->ID, 'exercise_data', true))
+        );
+    }
+    
+    return new WP_REST_Response($exercises, 200);
+}
+
+// Function to create exercise
+function create_exercise($request) {
+    $params = $request->get_params();
+    $exercise_data = json_decode($params['exercise'], true);
+    
+    $post_data = array(
+        'post_type' => 'exercise',
+        'post_status' => 'publish',
+        'post_title' => $exercise_data['title'] ?? 'New Exercise'
+    );
+    
+    $post_id = wp_insert_post($post_data);
+    
+    if (!is_wp_error($post_id)) {
+        update_post_meta($post_id, 'exercise_type', $exercise_data['type']);
+        update_post_meta($post_id, 'exercise_data', json_encode($exercise_data['data']));
+        
+        if (isset($_FILES['image'])) {
+            require_once(ABSPATH . 'wp-admin/includes/image.php');
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+            require_once(ABSPATH . 'wp-admin/includes/media.php');
+            
+            $attachment_id = media_handle_upload('image', $post_id);
+            if (!is_wp_error($attachment_id)) {
+                update_post_meta($post_id, 'exercise_image', $attachment_id);
+            }
+        }
+        
+        return new WP_REST_Response(array(
+            'id' => $post_id,
+            'message' => 'Exercise created successfully'
+        ), 201);
+    }
+    
+    return new WP_Error('creation_failed', 'Failed to create exercise');
+}
+
+// Function to handle JSON file uploads
+function handle_json_upload() {
+    if (!isset($_FILES['exercise_json'])) {
+        return;
+    }
+    
+    $file = $_FILES['exercise_json'];
+    $json_content = file_get_contents($file['tmp_name']);
+    $exercises = json_decode($json_content, true);
+    
+    if (json_last_error() === JSON_ERROR_NONE) {
+        foreach ($exercises as $exercise) {
+            $post_data = array(
+                'post_type' => 'exercise',
+                'post_status' => 'publish',
+                'post_title' => $exercise['word'] ?? $exercise['given'] ?? 'Exercise'
+            );
+            
+            $post_id = wp_insert_post($post_data);
+            update_post_meta($post_id, 'exercise_type', $exercise['type']);
+            update_post_meta($post_id, 'exercise_data', json_encode($exercise));
+        }
+    }
+}
+add_action('admin_init', 'handle_json_upload');
+```
+
+Step 2: React Frontend Setup
+---------------------------
+1. In your react-app directory, create these files:
+
+src/components/ExerciseManager.jsx:
+```jsx
+import React, { useState, useEffect } from 'react';
+import { Plus, Save, Upload, Trash } from 'lucide-react';
+
+const ExerciseManager = () => {
+  const [exercises, setExercises] = useState([]);
+  const [currentExercise, setCurrentExercise] = useState({
+    type: 'word_completion',
+    title: '',
+    data: {}
+  });
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  const exerciseTypes = {
+    word_completion: {
+      fields: ['sentence', 'given', 'answer', 'explanation']
+    },
+    consonant_blend: {
+      fields: ['word', 'blanks', 'question', 'explanation', 'sentence', 'wordFamily']
+    },
+    simple_addition: {
+      fields: ['given', 'suffix', 'answer', 'explanation']
+    },
+    possessive_hint: {
+      fields: ['given', 'hintWord', 'answer', 'explanation']
+    }
+  };
+
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
+  const fetchExercises = async () => {
+    try {
+      const response = await fetch('/wp-json/quiz/v1/exercises', {
+        headers: {
+          'X-WP-Nonce': window.wpSettings.nonce
+        }
+      });
+      const data = await response.json();
+      setExercises(data);
+    } catch (error) {
+      console.error('Error fetching exercises:', error);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('exercise', JSON.stringify(currentExercise));
+    if (selectedImage) {
+      formData.append('image', selectedImage);
+    }
+
+    try {
+      const response = await fetch('/wp-json/quiz/v1/exercises', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-WP-Nonce': window.wpSettings.nonce
+        }
+      });
+      
+      if (response.ok) {
+        fetchExercises();
+        setCurrentExercise({
+          type: 'word_completion',
+          title: '',
+          data: {}
+        });
+        setSelectedImage(null);
+      }
+    } catch (error) {
+      console.error('Error saving exercise:', error);
+    }
+  };
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('exercise_json', file);
+
+    try {
+      await fetch('/wp-admin/admin-ajax.php?action=upload_exercises', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-WP-Nonce': window.wpSettings.nonce
+        }
+      });
+      fetchExercises();
+    } catch (error) {
+      console.error('Error uploading exercises:', error);
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Exercise Management</h2>
+        <div className="flex gap-4">
+          <label className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer">
+            <Upload className="w-4 h-4 mr-2" />
+            Import JSON
+            <input
+              type="file"
+              accept=".json"
+              onChange={handleFileUpload}
+              className="hidden"
+            />
+          </label>
+          <button
+            onClick={() => setCurrentExercise({
+              type: 'word_completion',
+              title: '',
+              data: {}
+            })}
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add New Exercise
+          </button>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-sm mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700">Exercise Type</label>
+            <select
+              value={currentExercise.type}
+              onChange={(e) => setCurrentExercise({
+                ...currentExercise,
+                type: e.target.value,
+                data: {}
+              })}
+              className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+            >
+              {Object.keys(exerciseTypes).map((type) => (
+                <option key={type} value={type}>
+                  {type.replace('_', ' ').toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {exerciseTypes[currentExercise.type].fields.map((field) => (
+            <div key={field} className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">
+                {field.charAt(0).toUpperCase() + field.slice(1)}
+              </label>
+              <input
+                type="text"
+                value={currentExercise.data[field] || ''}
+                onChange={(e) => setCurrentExercise({
+                  ...currentExercise,
+                  data: {
+                    ...currentExercise.data,
+                    [field]: e.target.value
+                  }
+                })}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2"
+              />
+            </div>
+          ))}
+
+          {currentExercise.type === 'consonant_blend' && (
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700">Image</label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => setSelectedImage(e.target.files[0])}
+                className="mt-1 block w-full"
+              />
+            </div>
+          )}
+        </div>
+
+        <div className="flex justify-end mt-6">
+          <button
+            type="submit"
+            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            <Save className="w-4 h-4 mr-2" />
+            Save Exercise
+          </button>
+        </div>
+      </form>
+
+      <div className="bg-white rounded-lg shadow-sm">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h3 className="text-lg font-semibold">All Exercises</h3>
+        </div>
+        <ul className="divide-y divide-gray-200">
+          {exercises.map((exercise) => (
+            <li key={exercise.id} className="px-6 py-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h4 className="font-medium">{exercise.type}</h4>
+                  <pre className="mt-2 text-sm text-gray-600">
+                    {JSON.stringify(exercise.data, null, 2)}
+                  </pre>
+                </div>
+                <button
+                  onClick={() => handleDelete(exercise.id)}
+                  className="p-2 text-red-600 hover:bg-red-50 rounded-full"
+                >
+                  <Trash className="w-5 h-5" />
+                </button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+};
+
+export default ExerciseManager;
+```
+
+Step 3: File Organization
+------------------------
+Your final directory structure should look like this:
+
+```
+themes/astra/
+├── functions.php
+└── react-app/
+    ├── src/
+    │   ├── components/
+    │   │   └── ExerciseManager.jsx
+    │   └── App.jsx
+    ├── dist/
+    │   └── (build files)
+    └── template.php
+```
+
+Step 4: Implementation Steps
+---------------------------
+1. Copy the updated functions.php code to your theme's functions.php
+2. Create the ExerciseManager.jsx component in your react-app
+3. Add the ExerciseManager component to your App.jsx:
+   ```jsx
+   import ExerciseManager from './components/ExerciseManager';
+   
+   function App() {
+     return (
+       <div>
+         <ExerciseManager />
+       </div>
+     );
+   }
+   ```
+4. Build your React app and copy the dist folder to your theme's react-app directory
+5. Make sure your template.php file exists and is properly set up to load your React app
+
+Your dashboard will now:
+- Handle different exercise types dynamically
+- Support file uploads for both JSON exercises and images
+- Store all data in WordPress using custom post types
+- Provide a clean UI for managing exercises
+- Support all your different exercise structures through the flexible data storage
+
+The exercises will be stored in WordPress with the following structure:
+- Post Type: 'exercise'
+- Meta Fields:
+  - exercise_type: The type of exercise
+  - exercise_data: JSON string containing all exercise data
+  - exercise_image: Image attachment ID (if applicable)
+
+This setup allows for:
+- Flexible data structures for different exercise types
+- Easy addition of new exercise types
+- Secure storage and retrieval of exercise data
+- Clean separation of concerns between frontend and backend
+
+// Add to your existing functions.php
+function register_exercise_types() {
+    register_post_type('exercise', array(
+        'labels' => array(
+            'name' => 'Exercises',
+            'singular_name' => 'Exercise'
+        ),
+        'public' => true,
+        'show_in_rest' => true,
+        'supports' => array('title', 'editor', 'custom-fields'),
+        'menu_icon' => 'dashicons-welcome-learn-more'
+    ));
+}
+add_action('init', 'register_exercise_types');
+
+function register_exercise_api_routes() {
+    register_rest_route('quiz/v1', '/exercises', array(
+        'methods' => 'GET',
+        'callback' => 'get_exercises',
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('quiz/v1', '/exercises/(?P<type>[a-zA-Z_]+)', array(
+        'methods' => 'GET',
+        'callback' => 'get_exercises_by_type',
+        'permission_callback' => '__return_true'
+    ));
+
+    register_rest_route('quiz/v1', '/exercises', array(
+        'methods' => 'POST',
+        'callback' => 'create_exercise',
+        'permission_callback' => function() {
+            return current_user_can('edit_posts');
+        }
+    ));
+}
+add_action('rest_api_init', 'register_exercise_api_routes');
+
+function get_exercises() {
+    $args = array(
+        'post_type' => 'exercise',
+        'posts_per_page' => -1
+    );
+    
+    $posts = get_posts($args);
+    $exercises = array();
+    
+    foreach ($posts as $post) {
+        $exercises[] = array(
+            'id' => $post->ID,
+            'type' => get_post_meta($post->ID, 'exercise_type', true),
+            'data' => json_decode(get_post_meta($post->ID, 'exercise_data', true))
+        );
+    }
+    
+    return new WP_REST_Response($exercises, 200);
+}
+
+function get_exercises_by_type($request) {
+    $type = $request['type'];
+    
+    $args = array(
+        'post_type' => 'exercise',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                'key' => 'exercise_type',
+                'value' => $type,
+                'compare' => '='
+            )
+        )
+    );
+    
+    $posts = get_posts($args);
+    $exercises = array();
+    
+    foreach ($posts as $post) {
+        $exercises[] = array(
+            'id' => $post->ID,
+            'type' => get_post_meta($post->ID, 'exercise_type', true),
+            'data' => json_decode(get_post_meta($post->ID, 'exercise_data', true))
+        );
+    }
+    
+    return new WP_REST_Response($exercises, 200);
+}
+
+function create_exercise($request) {
+    $params = $request->get_params();
+    $exercise_data = json_decode($params['exercise'], true);
+    
+    $post_data = array(
+        'post_type' => 'exercise',
+        'post_status' => 'publish',
+        'post_title' => $exercise_data['title'] ?? 'New Exercise'
+    );
+    
+    $post_id = wp_insert_post($post_data);
+    
+    if (!is_wp_error($post_id)) {
+        update_post_meta($post_id, 'exercise_type', $exercise_data['type']);
+        update_post_meta($post_id, 'exercise_data', json_encode($exercise_data['data']));
+        
+        if (isset($_FILES['image'])) {
+            require_once(ABSPATH . 'wp-admin/includes/image.php');
+            require_once(ABSPATH . 'wp-admin/includes/file.php');
+            require_once(ABSPATH . 'wp-admin/includes/media.php');
+            
+            $attachment_id = media_handle_upload('image', $post_id);
+            if (!is_wp_error($attachment_id)) {
+                update_post_meta($post_id, 'exercise_image', $attachment_id);
+            }
+        }
+        
+        return new WP_REST_Response(array(
+            'id' => $post_id,
+            'message' => 'Exercise created successfully'
+        ), 201);
+    }
+    
+    return new WP_Error('creation_failed', 'Failed to create exercise');
+}
+register_rest_route('quiz/v1', '/exercises/(?P<id>\d+)', array(
+    'methods' => 'DELETE',
+    'callback' => 'delete_exercise',
+    'permission_callback' => function() {
+        return current_user_can('edit_posts');
+    }
+));
+
+function delete_exercise($request) {
+    $post_id = $request['id'];
+    
+    if (wp_delete_post($post_id, true)) {
+        return new WP_REST_Response(array(
+            'message' => 'Exercise deleted successfully'
+        ), 200);
+    }
+    
+    return new WP_Error('deletion_failed', 'Failed to delete exercise', array('status' => 500));
+}
+
+
+Functions.php old 
+<?php
+/**
+ * Add this to your functions.php in Astra theme
+ */
+
+// React App Integration
+function react_tailwind_enqueue_scripts() {
+    if (should_load_react_frontend()) {
+        // Dequeue Astra frontend styles
+        wp_dequeue_style('astra-theme-css');
+        wp_dequeue_style('astra-style');
+        
+        // Enqueue React app from react-app directory
+        wp_enqueue_script(
+            'react-tailwind-app-script',
+            get_template_directory_uri() . '/react-app/dist/assets/index-3Abfd3hW.js',
+            array(),
+            '1.0',
+            true
+        );
+        wp_enqueue_style(
+            'react-tailwind-app-style',
+            get_template_directory_uri() . '/react-app/dist/assets/index-mn4qNNV1.css',
+            array(),
+            '1.0'
+        );
+
+        // Add WordPress data for React
+        wp_localize_script('react-tailwind-app-script', 'wpSettings', array(
+            'nonce' => wp_create_nonce('wp_rest'),
+            'apiUrl' => esc_url_raw(rest_url()),
+            'baseUrl' => esc_url_raw(home_url()),
+            'templateUrl' => get_template_directory_uri()
+        ));
+    }
+}
+add_action('wp_enqueue_scripts', 'react_tailwind_enqueue_scripts', 99);
+
+// Check if React should be loaded
+function should_load_react_frontend() {
+    return !is_admin() && 
+           !in_array($GLOBALS['pagenow'], ['wp-login.php', 'wp-register.php']) && 
+           (!defined('REST_REQUEST') || !REST_REQUEST);
+}
+
+// Override template for React frontend
+function override_template_for_react() {
+    if (should_load_react_frontend()) {
+        include_once(get_template_directory() . '/react-app/template.php');
+        exit;
+    }
+}
+add_action('template_redirect', 'override_template_for_react', 1);

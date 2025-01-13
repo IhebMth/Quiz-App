@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef, createRef } from "react";
+import { useState, useEffect, useRef, createRef, useMemo } from "react";
 import { Volume2 } from "lucide-react";
 import Stats from "../Stats";
 import Feedback from "../FeedBack";
 import FinalResults from "../FinalResults";
 import IncorrectGapFill from "./IncorrectGapFillFeedback";
 import exercisesData from "./gapFillExercises.json";
+import getImagePath from "../../utils/imagePaths";
 
 export default function GapFill() {
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
@@ -27,9 +28,17 @@ export default function GapFill() {
 
   const inputRefs = useRef([]);
   const exercises = exercisesData.exercises;
-  const currentExercise = exercises[currentExerciseIndex];
   const totalExercises = exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
+
+  const currentExercise = useMemo(() => {
+    if (!exercises[currentExerciseIndex]) return null;
+    
+    return {
+      ...exercises[currentExerciseIndex],
+      image: getImagePath(exercises[currentExerciseIndex].image.split('/').pop())
+    };
+  }, [currentExerciseIndex]);
 
   useEffect(() => {
     const focusTimeout = setTimeout(() => {

@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp, Volume2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
+import getImagePath from "../../utils/imagePaths";
 
 const ExampleSectionSingleAnswer = ({ children, data }) => {
   const [mode, setMode] = useState("practice");
@@ -70,7 +71,16 @@ const ExampleSectionSingleAnswer = ({ children, data }) => {
         {isSyllable ? (
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
-              <span className="text-xl font-medium">{example.word}</span>
+              <div className="flex items-center">
+                {example.image && (
+                  <img
+                    src={getImagePath(example.image)}
+                    alt={example.word}
+                    className="w-12 h-12 object-cover rounded-lg mr-4"
+                  />
+                )}
+                <span className="text-xl font-medium">{example.word}</span>
+              </div>
               <button
                 onClick={() => playWord(example.word, example.syllables)}
                 disabled={isPlaying}
@@ -97,7 +107,16 @@ const ExampleSectionSingleAnswer = ({ children, data }) => {
         ) : (
           <div className="space-y-4">
             <div className="flex items-center space-x-4">
-              <span className="text-xl font-medium">{example.targetWord}</span>
+              <div className="flex items-center">
+                {example.image && (
+                  <img
+                    src={getImagePath(example.image)}
+                    alt={example.targetWord}
+                    className="w-12 h-12 object-cover rounded-lg mr-4"
+                  />
+                )}
+                <span className="text-xl font-medium">{example.targetWord}</span>
+              </div>
               <button
                 onClick={() => playWord(example.targetWord)}
                 disabled={isPlaying}
@@ -108,11 +127,25 @@ const ExampleSectionSingleAnswer = ({ children, data }) => {
             </div>
             <div className="flex flex-wrap gap-2">
               {example.rhymingWords.map((word, index) => (
-                <div key={index} className="px-3 py-1 bg-green-100 rounded">
+                <div key={index} className="flex items-center px-3 py-1 bg-green-100 rounded">
+                  {example.rhymingWordImages?.[index] && (
+                    <img
+                      src={getImagePath(example.rhymingWordImages[index])}
+                      alt={word}
+                      className="w-8 h-8 object-cover rounded mr-2"
+                    />
+                  )}
                   {word}
                 </div>
               ))}
-              <div className="px-3 py-1 bg-red-100 rounded">
+              <div className="flex items-center px-3 py-1 bg-red-100 rounded">
+                {example.nonRhymingWordImage && (
+                  <img
+                    src={getImagePath(example.nonRhymingWordImage)}
+                    alt={example.nonRhymingWord}
+                    className="w-8 h-8 object-cover rounded mr-2"
+                  />
+                )}
                 {example.nonRhymingWord}
               </div>
             </div>
@@ -156,12 +189,15 @@ const ExampleSectionSingleAnswer = ({ children, data }) => {
     }).isRequired,
     example: PropTypes.shape({
       word: PropTypes.string,
+      image: PropTypes.string,
       syllables: PropTypes.arrayOf(PropTypes.string),
       explanation: PropTypes.string.isRequired,
       tips: PropTypes.string,
       targetWord: PropTypes.string,
       rhymingWords: PropTypes.arrayOf(PropTypes.string),
+      rhymingWordImages: PropTypes.arrayOf(PropTypes.string),
       nonRhymingWord: PropTypes.string,
+      nonRhymingWordImage: PropTypes.string,
     }).isRequired,
   };
 

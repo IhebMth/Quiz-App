@@ -20,9 +20,9 @@ import Stats from "../Stats";
 import Feedback from "../FeedBack";
 import FinalResults from "../FinalResults";
 import IncorrectSequencingFeedback from "./IncorrectSequencingFeedback";
-import exercisesData from "./sequencingExercises.json";
 
 export default function Sequence() {
+  const [exercises, setExercises] = useState([]);
   const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
   const [items, setItems] = useState([]);
   const [activeId, setActiveId] = useState(null);
@@ -55,13 +55,35 @@ export default function Sequence() {
 
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  const currentExercise = exercisesData.exercises[currentExerciseIndex];
-  const totalExercises = exercisesData.exercises.length;
+  // Fetch exercises from WordPress API
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await fetch(`${window.wpSettings.apiUrl}quiz/v1/exercises?type=sequencing`, {
+          headers: {
+            'X-WP-Nonce': window.wpSettings.nonce
+          }
+        });
+        if (!response.ok) throw new Error('Failed to fetch exercises');
+        const data = await response.json();
+        setExercises(data);
+      } catch (error) {
+        console.error('Error fetching exercises:', error);
+      }
+    };
+
+    fetchExercises();
+  }, []);
+
+  const currentExercise = exercises[currentExerciseIndex] || null;
+  const totalExercises = exercises.length;
   const pointsPerQuestion = 100 / totalExercises;
 
   useEffect(() => {
-    setItems(currentExercise.options);
-  }, [currentExerciseIndex]);
+    if (currentExercise && currentExercise.data && currentExercise.data.options) {
+      setItems(currentExercise.data.options);
+    }
+  }, [currentExerciseIndex, currentExercise]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -120,9 +142,9 @@ export default function Sequence() {
         dragElement.classList.remove('touch-none', 'select-none', 'z-50');
       }
     }
-
     setActiveId(null);
   };
+
 
   const handleGotIt = () => {
     setShowIncorrectFeedback(false);
@@ -140,6 +162,8 @@ export default function Sequence() {
   };
 
   const checkAnswer = () => {
+    if (!currentExercise || !currentExercise.data) return;
+
     const isSequenceCorrect = items.every(
       (item, index) => item.order === index + 1
     );
@@ -154,7 +178,7 @@ export default function Sequence() {
         {
           isCorrect: isSequenceCorrect,
           userAnswer: items.map((item) => item.content),
-          correctAnswer: currentExercise.correctOrder,
+          correctAnswer: currentExercise.data.correctOrder,
           explanation: currentExercise.solution,
         },
       ],
@@ -201,11 +225,15 @@ export default function Sequence() {
     return `${baseClass} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4`;
   };
 
+  if (!currentExercise) {
+    return <div>Loading exercises...</div>;
+  }
+
   if (showFinalResults) {
     return (
       <FinalResults
         results={results}
-        exercises={exercisesData.exercises}
+        exercises={exercises}
         exerciseType="sequencing"
         onRestart={() => {
           setCurrentExerciseIndex(0);
@@ -246,7 +274,7 @@ export default function Sequence() {
                     {currentExercise.question}
                   </h1>
 
-                  {currentExercise.contentType === "mixed" && (
+                  {currentExercise.contentType === "mixed" && currentExercise.image && (
                     <img
                       src={currentExercise.image}
                       alt="Exercise"
@@ -273,18 +301,18 @@ export default function Sequence() {
                         <SortableContext
                           items={items}
                           strategy={
-                            currentExercise.type === "sentence" || currentExercise.type === "phrases"
+                            currentExercise.exerciseType === "sentence" || currentExercise.exerciseType === "phrases"
                               ? horizontalListSortingStrategy
                               : rectSwappingStrategy
                           }
                         >
-                          <div className={getContainerClass(currentExercise.type)}>
+                          <div className={getContainerClass(currentExercise.exerciseType)}>
                             {items.map((item) => (
                               <SortableItem
                                 key={item.id}
                                 id={item.id}
                                 content={item.content}
-                                type={currentExercise.type}
+                                type={currentExercise.exerciseType}
                                 isActive={item.id === activeId}
                               />
                             ))}

@@ -2,10 +2,44 @@ import { useState, useRef, useEffect } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
+import getImagePath from "../../utils/imagePaths"; // Add image path utility
 
 const ExamplePracticeSection = ({ children, data }) => {
   const [mode, setMode] = useState("practice");
   const sectionRef = useRef(null);
+
+  // Process any images in the incoming data
+  const processedData = (() => {
+    const processImages = (obj) => {
+      const processed = { ...obj };
+      
+      // Process images in sensoryExercise categories
+      if (processed.sensoryExercise?.categories) {
+        Object.entries(processed.sensoryExercise.categories).forEach(([category, items]) => {
+          processed.sensoryExercise.categories[category] = items.map(item => ({
+            ...item,
+            // Process image if it exists
+            image: item.image ? getImagePath(item.image.split('/').pop()) : item.image
+          }));
+        });
+      }
+
+      // Process images in sensoryExamples
+      if (processed.sensoryExamples) {
+        Object.entries(processed.sensoryExamples).forEach(([sense, details]) => {
+          processed.sensoryExamples[sense] = details.map(detail => ({
+            ...detail,
+            // Process image if it exists
+            image: detail.image ? getImagePath(detail.image.split('/').pop()) : detail.image
+          }));
+        });
+      }
+
+      return processed;
+    };
+
+    return processImages(data);
+  })();
 
   const toggleMode = () => {
     setMode((prev) => (prev === "practice" ? "example" : "practice"));
@@ -17,20 +51,22 @@ const ExamplePracticeSection = ({ children, data }) => {
     }
   }, [mode]);
 
-  const ExampleItem = ({ text }) => (
+  const ExampleItem = ({ text, image }) => (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="bg-white rounded-lg  sm:p-3 shadow-sm sm:border sm:border-gray-200"
+      className="bg-white rounded-lg sm:p-3 shadow-sm sm:border sm:border-gray-200"
     >
+      {image && <img src={image} alt={text} className="w-full h-auto mb-2 rounded" />}
       {text}
     </motion.div>
   );
 
   ExampleItem.propTypes = {
     text: PropTypes.string.isRequired,
+    image: PropTypes.string
   };
 
   const ExampleContent = () => (
@@ -43,33 +79,36 @@ const ExamplePracticeSection = ({ children, data }) => {
     >
       <div className="bg-white p-6 sm:mt-14 rounded-lg border-2 border-gray-200 mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
-          {data.sensoryExercise.question}
+          {processedData.sensoryExercise.question}
         </h2>
         <p className="text-gray-600 mb-6">
           Here&apos;s an example of how sensory details can be categorized by the sense they appeal to.
         </p>
 
-        <div className="grid grid-cols-2 md:grid-cols-2  lg:grid-cols-3 gap-4 mb-6">
-          {Object.entries(data.sensoryExercise.categories).map(([category, items]) => (
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+          {Object.entries(processedData.sensoryExercise.categories).map(([category, items]) => (
             <div
               key={category}
-              className="border-2 rounded-lg transition-colors  duration-200 border-blue-300 bg-white"
+              className="border-2 rounded-lg transition-colors duration-200 border-blue-300 bg-white"
             >
-              <div className="text-gray-700 font-medium text-center  py-3 border-b-2 border-blue-300">
+              <div className="text-gray-700 font-medium text-center py-3 border-b-2 border-blue-300">
                 <span className="capitalize">{category}</span>
-                <span className="ml-2 text-sm text-gray-500 ">({items.length} items)</span>
+                <span className="ml-2 text-sm text-gray-500">({items.length} items)</span>
               </div>
-              <div className="min-h-[200px] p-4 space-y-3 ">
+              <div className="min-h-[200px] p-4 space-y-3">
                 <AnimatePresence>
                   {items.map((item) => (
-                    <ExampleItem key={item.id} text={item.content} />
+                    <ExampleItem 
+                      key={item.id} 
+                      text={item.content}
+                      image={item.image}
+                    />
                   ))}
                 </AnimatePresence>
               </div>
             </div>
           ))}
         </div>
-
         <div className="bg-blue-50 p-4 rounded-lg">
           <h3 className="font-medium text-gray-800 mb-2">Learning Points:</h3>
           <ul className="text-gray-700 space-y-2">
@@ -138,18 +177,16 @@ const ExamplePracticeSection = ({ children, data }) => {
   return (
     <div ref={sectionRef} className="w-full max-w-5xl mx-auto">
       <button
-  onClick={toggleMode}
-  className="flex items-center w-auto px-4 py-2 mx-auto  mb-8 lg:-mb-10 md:-mb-10 text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
-  style={{ justifyContent: "space-between" }}
->
-  {mode === "practice" ? "Learn with an example" : "Back to practice"}
-  {mode === "practice" ? (
-    <ChevronDown className="w-5 h-5" />
-  ) : (
-    <ChevronUp className="w-5 h-5" />
-  )}
-</button>
-
+        onClick={toggleMode}
+        className="flex items-center w-auto px-4 py-2 mx-auto text-lg font-medium text-blue-500 border-b-2 border-b-blue-500 transition-colors"
+      >
+        {mode === "practice" ? "Learn with an example" : "Back to practice"}
+        {mode === "practice" ? (
+          <ChevronDown className="w-5 h-5 ml-2" />
+        ) : (
+          <ChevronUp className="w-5 h-5 ml-2" />
+        )}
+      </button>
 
       <AnimatePresence mode="wait">
         {mode === "practice" ? (
