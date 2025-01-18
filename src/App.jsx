@@ -10,7 +10,7 @@ import SingleAnswerWithExample from './components/singleAnswer/SingleAnswerWithA
 import MultipleAnswerWithExample from './components/multipleAnswers/MultipleAnswersWithAnExample';
 import SequencingWithExample from './components/sequencing/SequincingWithAnExample';
 import TableExercisesWithAnExample from './components/tableExercise/TableExercisesWithAnExample';
-import ExerciseManager from './components/Dashboard';
+import ExerciseManager from './components/dashboard/Dashboard';
 import Privacy from './components/Privacy';
 import Terms from './components/Terms';
 import Contact from './components/Contact';

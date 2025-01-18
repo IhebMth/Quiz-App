@@ -3,11 +3,9 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ mode }) => ({
   plugins: [react()],
-  // Base URL changes depending on environment
   base: mode === 'development' ? '/' : '/wp-content/themes/astra/react-app/dist/',
   build: {
-    // Output directory for production build
-    outDir: '../wp-content/themes/astra/react-app/dist',
+    outDir: 'dist',
     emptyOutDir: true,
     rollupOptions: {
       output: {

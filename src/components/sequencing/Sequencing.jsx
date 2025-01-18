@@ -59,16 +59,19 @@ export default function Sequence() {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await fetch(`${window.wpSettings.apiUrl}quiz/v1/exercises?type=sequencing`, {
-          headers: {
-            'X-WP-Nonce': window.wpSettings.nonce
+        const response = await fetch(
+          `${window.wpSettings.apiUrl}quiz/v1/exercises?type=sequencing`,
+          {
+            headers: {
+              "X-WP-Nonce": window.wpSettings.nonce,
+            },
           }
-        });
-        if (!response.ok) throw new Error('Failed to fetch exercises');
+        );
+        if (!response.ok) throw new Error("Failed to fetch exercises");
         const data = await response.json();
         setExercises(data);
       } catch (error) {
-        console.error('Error fetching exercises:', error);
+        console.error("Error fetching exercises:", error);
       }
     };
 
@@ -80,8 +83,20 @@ export default function Sequence() {
   const pointsPerQuestion = 100 / totalExercises;
 
   useEffect(() => {
-    if (currentExercise && currentExercise.data && currentExercise.data.options) {
-      setItems(currentExercise.data.options);
+    if (
+      currentExercise &&
+      currentExercise.data &&
+      currentExercise.data.options
+    ) {
+      // Ensure each option has the required properties
+      const formattedItems = currentExercise.data.options.map(
+        (option, index) => ({
+          id: option.id || String(Date.now() + index),
+          content: option.content,
+          order: option.order || index + 1,
+        })
+      );
+      setItems(formattedItems);
     }
   }, [currentExerciseIndex, currentExercise]);
 
@@ -97,10 +112,10 @@ export default function Sequence() {
   const handleDragStart = (event) => {
     const { active } = event;
     setActiveId(active.id);
-    
+
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
-      dragElement.classList.add('touch-none', 'select-none', 'z-50');
+      dragElement.classList.add("touch-none", "select-none", "z-50");
     }
   };
 
@@ -129,7 +144,7 @@ export default function Sequence() {
 
     const dragElement = document.getElementById(active.id);
     if (dragElement) {
-      dragElement.classList.remove('touch-none', 'select-none', 'z-50');
+      dragElement.classList.remove("touch-none", "select-none", "z-50");
     }
 
     setActiveId(null);
@@ -139,12 +154,11 @@ export default function Sequence() {
     if (activeId) {
       const dragElement = document.getElementById(activeId);
       if (dragElement) {
-        dragElement.classList.remove('touch-none', 'select-none', 'z-50');
+        dragElement.classList.remove("touch-none", "select-none", "z-50");
       }
     }
     setActiveId(null);
   };
-
 
   const handleGotIt = () => {
     setShowIncorrectFeedback(false);
@@ -164,9 +178,11 @@ export default function Sequence() {
   const checkAnswer = () => {
     if (!currentExercise || !currentExercise.data) return;
 
-    const isSequenceCorrect = items.every(
-      (item, index) => item.order === index + 1
-    );
+    // Check if items are in correct order based on their position
+    const isSequenceCorrect = items.every((item, index) => {
+      const correctItem = currentExercise.data.correctOrder[index];
+      return item.content === correctItem;
+    });
 
     setIsCorrect(isSequenceCorrect);
     setShowFeedback(true);
@@ -206,22 +222,24 @@ export default function Sequence() {
   };
 
   const getContainerClass = (type) => {
-    const baseClass = "touch-none select-none relative w-full max-w-full overflow-hidden";
-    
-    if (type === 'phrases') {
+    const baseClass =
+      "touch-none select-none relative w-full max-w-full overflow-hidden";
+
+    if (type === "phrases") {
       return `${baseClass} flex flex-col items-start p-4 backdrop-blur-sm`;
     }
-    
-    if (type === 'image-word') {
+
+    if (type === "image-word") {
       const itemCount = items.length;
-      const gridCols = itemCount <= 4 ? `grid-cols-${itemCount}` : 'grid-cols-4';
+      const gridCols =
+        itemCount <= 4 ? `grid-cols-${itemCount}` : "grid-cols-4";
       return `${baseClass} grid ${gridCols} gap-2 p-4 rounded-xl mx-auto`;
     }
-    
-    if (type === 'sentence') {
+
+    if (type === "sentence") {
       return `${baseClass} flex flex-row flex-nowrap items-center gap-2 p-4`;
     }
-    
+
     return `${baseClass} grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 p-4`;
   };
 
@@ -274,13 +292,14 @@ export default function Sequence() {
                     {currentExercise.question}
                   </h1>
 
-                  {currentExercise.contentType === "mixed" && currentExercise.image && (
-                    <img
-                      src={currentExercise.image}
-                      alt="Exercise"
-                      className="mb-4 sm:mb-8 mx-auto rounded-lg shadow-md max-w-full h-auto max-h-[200px] sm:max-h-[300px]"
-                    />
-                  )}
+                  {currentExercise.contentType === "mixed" &&
+                    currentExercise.image && (
+                      <img
+                        src={currentExercise.image}
+                        alt="Exercise"
+                        className="mb-4 sm:mb-8 mx-auto rounded-lg shadow-md max-w-full h-auto max-h-[200px] sm:max-h-[300px]"
+                      />
+                    )}
 
                   <div className="space-y-4 sm:space-y-6 w-full">
                     <DndContext
@@ -301,12 +320,17 @@ export default function Sequence() {
                         <SortableContext
                           items={items}
                           strategy={
-                            currentExercise.exerciseType === "sentence" || currentExercise.exerciseType === "phrases"
+                            currentExercise.exerciseType === "sentence" ||
+                            currentExercise.exerciseType === "phrases"
                               ? horizontalListSortingStrategy
                               : rectSwappingStrategy
                           }
                         >
-                          <div className={getContainerClass(currentExercise.exerciseType)}>
+                          <div
+                            className={getContainerClass(
+                              currentExercise.exerciseType
+                            )}
+                          >
                             {items.map((item) => (
                               <SortableItem
                                 key={item.id}

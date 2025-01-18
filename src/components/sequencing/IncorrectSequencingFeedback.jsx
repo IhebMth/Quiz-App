@@ -2,10 +2,9 @@ import { motion } from 'framer-motion';
 import { AlertCircle } from 'lucide-react';
 import PropTypes from 'prop-types';
 
-const MetallicRibbon = ({ text, color, gradientFrom, gradientTo }) => (
+const MetallicRibbon = ({ text, color }) => (
   <div className="block absolute -top-3 right-1/4">
     <div className={`relative min-w-24 w-auto h-auto p-2 ${color} flex items-center justify-center shadow-lg rotate-0`}>
-      <div className={`absolute inset-10 bg-gradient-to-r from-${gradientFrom} to-${gradientTo} opacity-50`}></div>
       <span className="relative text-white font-semibold text-[10px] sm:text-sm tracking-wider">{text}</span>
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20"></div>
       <div className="absolute inset-y-0 right-0 w-px bg-white opacity-30"></div>
@@ -77,33 +76,27 @@ const IncorrectSequencingFeedback = ({
           <div className="border border-gray-300 p-3 sm:p-5 relative">
             <MetallicRibbon 
               text="Your Sequence" 
-              color="bg-red-500" 
-              gradientFrom="red-400" 
-              gradientTo="red-800" 
+              color="bg-red-500"
             />
             <div className="mt-6">
-              <SequenceDisplay items={userAnswer} type={currentExercise.type} />
+              <SequenceDisplay items={userAnswer} type={currentExercise.exerciseType} />
             </div>
           </div>
 
           <div className="border border-gray-300 p-3 sm:p-5 relative">
             <MetallicRibbon 
               text="Correct Sequence" 
-              color="bg-green-600" 
-              gradientFrom="green-400" 
-              gradientTo="green-800" 
+              color="bg-green-600"
             />
             <div className="mt-6">
-              <SequenceDisplay items={currentExercise.correctOrder} type={currentExercise.type} />
+              <SequenceDisplay items={currentExercise.data.correctOrder} type={currentExercise.exerciseType} />
             </div>
           </div>
 
           <div className="border border-gray-300 p-3 sm:p-5 relative">
             <MetallicRibbon 
               text="Explanation" 
-              color="bg-blue-600" 
-              gradientFrom="blue-400" 
-              gradientTo="blue-800" 
+              color="bg-blue-600"
             />
             <div className="mt-6">
               <p className="text-gray-700 text-xs sm:text-sm">{currentExercise.solution}</p>
@@ -113,9 +106,7 @@ const IncorrectSequencingFeedback = ({
           <div className="border border-gray-300 p-3 sm:p-5 relative">
             <MetallicRibbon 
               text="Tips" 
-              color="bg-yellow-600" 
-              gradientFrom="yellow-400" 
-              gradientTo="yellow-800" 
+              color="bg-yellow-600"
             />
             <div className="mt-6">
               <div className="bg-yellow-50 p-3 rounded-lg">
@@ -148,25 +139,25 @@ const IncorrectSequencingFeedback = ({
 
 MetallicRibbon.propTypes = {
   text: PropTypes.string.isRequired,
-  color: PropTypes.string.isRequired,
-  gradientFrom: PropTypes.string.isRequired,
-  gradientTo: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired
 };
 
 SequenceDisplay.propTypes = {
   items: PropTypes.arrayOf(PropTypes.string).isRequired,
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired
 };
 
 IncorrectSequencingFeedback.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   currentExercise: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    correctOrder: PropTypes.arrayOf(PropTypes.string).isRequired,
+    exerciseType: PropTypes.string.isRequired,
+    data: PropTypes.shape({
+      correctOrder: PropTypes.arrayOf(PropTypes.string).isRequired
+    }).isRequired,
     solution: PropTypes.string.isRequired
   }).isRequired,
   userAnswer: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onGotIt: PropTypes.func.isRequired,
+  onGotIt: PropTypes.func.isRequired
 };
 
 export default IncorrectSequencingFeedback;
